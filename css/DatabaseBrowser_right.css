@@ -1,0 +1,83 @@
+#right > * {
+	margin:0px 20px;
+}
+
+h1 span.small {
+	font-size:0.8em;
+	font-weight:normal;
+}
+
+#tabs {
+	overflow:hidden;
+}
+
+.ui-tabs-nav {
+	height:25px;
+}
+
+.tabbody {
+	width:90%;
+	height:100%;
+	overflow:auto;
+}
+
+#right form {
+	margin:0;
+}
+
+#right form > * {
+	margin-bottom:1em;
+}
+
+#right table thead td {
+	font-weight:bold;
+	background:#eee;
+}
+
+#right table tbody tr.even {
+	background:#f8f8f8;
+}
+
+#right button.pagination a {
+	display:block;
+	width:16px;
+	height:16px;
+	background:url(../../sapphire/thirdparty/jquery-ui-themes/base/images/ui-icons_888888_256x240.png) no-repeat 0px 0px;
+}
+
+#right button.first-page a { background-position:-240px -32px; }
+#right button.prev-page  a { background-position:-96px -32px; }
+#right button.next-page  a { background-position:-32px -32px; }
+#right button.last-page  a { background-position:-208px -32px; }
+
+#ajax_msg {
+	margin-top: 5px;
+	padding: 0.25em 0.7em;
+	font-size:14px;
+	font-weight:bold;
+	float:left;
+	background:#fff;
+	border:1px solid #aaa;
+	color:#555;
+	min-width:20%;
+	display:none;
+}
+
+#ajax_msg.waiting {
+	padding-left:35px;
+	background:url("../../cms/images/network-save.gif") no-repeat scroll 7px 50% #fff;
+}
+
+#ajax_msg.good {
+	padding-left:35px;
+	background:url("../../cms/images/alert-good.gif") no-repeat scroll 7px 50% #E2F9E3;
+	border:1px solid #8DD38D;
+	color:#006600;
+}
+
+#ajax_msg.bad {
+	padding-left:35px;
+	background:url("../../cms/images/alert-bad.gif") no-repeat scroll 7px 50% #FFE9E9;
+	border-color:#FF8E8E;
+	color:#C80700;
+}

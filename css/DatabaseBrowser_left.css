@@ -1,0 +1,48 @@
+#lefthead {
+	border-bottom:1px solid #ccc;
+	background:#eee;
+	padding-left:3px;
+}
+
+#lefthead:hover {
+	background:#ffb;
+}
+
+#left ul {
+	background:white;
+}
+
+#left li {
+	margin:1px 0;
+	padding:3px;
+	border-top:1px solid white;
+	border-bottom:1px solid white;
+}
+
+#left li:hover {
+	background:#ffb;
+}
+
+#left a {
+	color:black;
+	text-decoration:none;
+}
+
+#left li a {
+	font-size:11px;
+}
+
+#left a:hover {
+	background:transparent;
+}
+
+#dbb_table_list {
+	overflow:auto;
+}
+
+#dbb_table_list li.selected {
+	border-top:1px solid #ccf;
+	border-bottom:1px solid #ccf;
+	background:#eef;
+	font-weight:bold;
+}
