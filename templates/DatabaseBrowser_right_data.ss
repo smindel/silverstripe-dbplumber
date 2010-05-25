@@ -5,12 +5,12 @@
 					</p>
 					<p>
 						<% if Stats.firstlink %>
-							<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination first-page" aria-disabled="false"><a href='{$Link}show/$Name?{$Stats.firstlink}&{$Stats.orderlink}'>&nbsp;</a></button>
-							<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination prev-page"  aria-disabled="false"><a href='{$Link}show/$Name?{$Stats.prevlink}&{$Stats.orderlink}'>&nbsp;</a></button>
+							<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination first-page" aria-disabled="false"><a href='{$Link}?{$Stats.firstlink}&{$Stats.orderlink}'>&nbsp;</a></button>
+							<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination prev-page"  aria-disabled="false"><a href='{$Link}?{$Stats.prevlink}&{$Stats.orderlink}'>&nbsp;</a></button>
 						<% end_if %>
 						<% if Stats.lastlink %>
-							<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination next-page" aria-disabled="false"><a href='{$Link}show/$Name?{$Stats.nextlink}&{$Stats.orderlink}'>&nbsp;</a></button>
-							<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination last-page" aria-disabled="false"><a href='{$Link}show/$Name?{$Stats.lastlink}&{$Stats.orderlink}'>&nbsp;</a></button>
+							<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination next-page" aria-disabled="false"><a href='{$Link}?{$Stats.nextlink}&{$Stats.orderlink}'>&nbsp;</a></button>
+							<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination last-page" aria-disabled="false"><a href='{$Link}?{$Stats.lastlink}&{$Stats.orderlink}'>&nbsp;</a></button>
 						<% end_if %>
 					</p>
 				<% end_if %>
@@ -18,8 +18,8 @@
 					<thead>
 						<tr>
 							<% control Fields %>
-								<% if Link %>
-									<td class='fieldname'><a href='{$Link}'>$Name</a></td>
+								<% if Table %>
+									<td class='fieldname<% if Ordered %> order$Ordered<% end_if %>'><a href='$Table.Link?start=$Table.requestVar(start)&orderby=$Name&orderdir=<% if Ordered == ASC %>DESC<% else %>ASC<% end_if %>'>$Name</a></td>
 								<% else %>
 									<td>$Name</td>
 								<% end_if %>

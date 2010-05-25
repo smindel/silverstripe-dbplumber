@@ -34,6 +34,16 @@ h1 span.small {
 	background:#eee;
 }
 
+#right table thead td.fieldname.orderASC a {
+	padding-left:12px;
+	background:url(../../cms/images/bullet_arrow_down.png) no-repeat 0px 1px;
+}
+
+#right table thead td.fieldname.orderDESC a {
+	padding-left:12px;
+	background:url(../../cms/images/bullet_arrow_up.png) no-repeat 0px 1px;
+}
+
 #right table tbody tr.even {
 	background:#f8f8f8;
 }

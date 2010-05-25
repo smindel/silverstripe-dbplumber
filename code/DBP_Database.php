@@ -2,18 +2,20 @@
 
 class DBP_Database extends ViewableData {
 	
-	protected $Name;
-	protected $Type;
-	protected $Version;
-	protected $Adapter;
+	function Name() {
+		return DB::getConn()->currentDatabase();
+	}
 
-	function __construct() {
-		parent::__construct();
-		
-		$this->Name = DB::getConn()->currentDatabase(),
-		$this->Type = DB::getConn()->getDatabaseServer(),
-		$this->Version = DB::getConn()->getVersion(),
-		$this->Adapter = get_class(DB::getConn()),
+	function Type() {
+		return DB::getConn()->getDatabaseServer();
+	}
+
+	function Version() {
+		return @DB::getConn()->getVersion();
+	}
+
+	function Adapter() {
+		return get_class(DB::getConn());
 	}
 
 	function Tables() {
@@ -27,4 +29,7 @@ class DBP_Database extends ViewableData {
 		return $tables;
 	}
 	
+	function Link() {
+		return Controller::curr()->Link();
+	}
 }

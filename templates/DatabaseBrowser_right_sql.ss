@@ -4,7 +4,10 @@
 				</form>
 				<% if Sql %>
 					<% control Sql %>
-						<% if Error %><p class='ui-state-error ui-corner-all'>$Error</p><% end_if %>
-						<% include DatabaseBrowser_right_data %>
+						<% if Message %>
+							<div class='ui-state-$Message.type ui-corner-all'><p>$Message.text</p></div>
+						<% else %>
+							<% include DatabaseBrowser_right_data %>
+						<% end_if %>
 					<% end_control %>
 				<% end_if %>
