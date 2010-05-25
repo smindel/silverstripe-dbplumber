@@ -81,13 +81,14 @@ class DatabaseBrowser extends LeftAndMain {
 				$msg = new ArrayData(array('text' => '4711 records affected', 'type' => 'highlight'));
 			} else {
 				foreach($result as $record) {
-					$head = false;
 					$row = new DataObjectSet();
 					foreach($record as $name => $cell) {
-						if(!$head) $fields->push(new ArrayData(array('Name' => $name)));
-						$row->push(new ArrayData(array('Val' => htmlentities(substr($cell, 0, 100)))));
+						if(empty($head[$name])) {
+							$fields->push(new ArrayData(array('Name' => $name)));
+							$head[$name] = true;
+						}
+						$row->push(new ArrayData(array('Val' => htmlentities(substr($cell, 0, 50)))));
 					}
-					$head = true;
 					$rows->push(new ArrayData(array('Cells' => $row)));
 					// highlight
 				}

@@ -51,7 +51,7 @@ class DBP_Table extends ViewableData {
 					$class[$key] = preg_match('/^\w+/i', $field->Spec(), $match) ? strtolower($match[0]) : false;
 				}
 				$row->push(new ArrayData(array(
-					'Val' => htmlentities(substr($cell, 0, 32)),
+					'Val' => htmlentities(substr($cell, 0, 50)),
 					'Type' => $class[$key],
 				)));
 			}
