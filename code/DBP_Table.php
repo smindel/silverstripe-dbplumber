@@ -46,7 +46,14 @@ class DBP_Table extends ViewableData {
 			$row = new DataObjectSet();
 			foreach($record as $key => $cell) {
 				if($key == 'rowNo_hide') continue;
-				$row->push(new ArrayData(array('Val' => htmlentities(substr($cell, 0, 100)))));
+				if(empty($class[$key])) {
+					$field = new DBP_Field($this, $key);
+					$class[$key] = preg_match('/^\w+/i', $field->Spec(), $match) ? strtolower($match[0]) : false;
+				}
+				$row->push(new ArrayData(array(
+					'Val' => htmlentities(substr($cell, 0, 32)),
+					'Type' => $class[$key],
+				)));
 			}
 			$rows->push(new ArrayData(array('Cells' => $row)));
 		}

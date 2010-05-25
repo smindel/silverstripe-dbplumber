@@ -29,6 +29,10 @@ h1 span.small {
 	margin-bottom:1em;
 }
 
+#right table td {
+	padding:2px;
+}
+
 #right table thead td {
 	font-weight:bold;
 	background:#eee;
@@ -44,8 +48,20 @@ h1 span.small {
 	background:url(../../cms/images/bullet_arrow_up.png) no-repeat 0px 1px;
 }
 
+#right td.int, #right td.tinyint {
+	text-align:right;
+}
+
 #right table tbody tr.even {
 	background:#f8f8f8;
+}
+
+#right #browse-tab table tbody tr:hover {
+	background:#ffb;
+}
+
+#right #browse-tab table tbody tr.selected {
+	background:#ddf;
 }
 
 #right button.pagination a {

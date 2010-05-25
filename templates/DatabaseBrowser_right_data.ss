@@ -14,7 +14,11 @@
 						<% end_if %>
 					</p>
 				<% end_if %>
-				<table>
+				<table class='kike'>
+						<colgroup><% control Fields %>
+							<col /><% end_control %>
+						</colgroup>
+
 					<thead>
 						<tr>
 							<% control Fields %>
@@ -30,7 +34,7 @@
 						<% control Rows %>
 							<tr class='<% if Even %>even<% else %>odd<% end_if %>'>
 								<% control Cells %>
-									<td>$Val</td>
+									<td class='$Type'>$Val</td>
 								<% end_control %>
 							</tr>
 						<% end_control %>

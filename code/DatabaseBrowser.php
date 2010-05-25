@@ -16,6 +16,9 @@ class DatabaseBrowser extends LeftAndMain {
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.tabs.css');
 		
 		Requirements::javascript("dbplumber/javascript/DatabaseBrowser.js");
+		Requirements::javascript("dbplumber/thirdparty/jquery.event.drag-1.4.js");
+		Requirements::javascript("dbplumber/thirdparty/jquery.kiketable.colsizable-1.1.js");
+		Requirements::css("dbplumber/thirdparty/jquery.kiketable.colsizable-1.1.css");
 		Requirements::css("dbplumber/css/DatabaseBrowser_left.css");
 		Requirements::css("dbplumber/css/DatabaseBrowser_right.css");
 	}
