@@ -1,4 +1,18 @@
-*DB Plumber*
+# DB Plumber
+
+## Maintainer Contact
+ * Andreas Piening
+   <andreas (at) silverstripe (dot) com>
+
+## Requirements
+ * SilverStripe 2.4 or newer
+
+
+## Installation
+ * do the usual
+   <http://doc.silverstripe.org/modules#installation>
+
+## Description
 
 - Ever wanted to just browse a database table or CRUD records, BUT you didn't have a suitable SQL client at hand?
 - Ever wanted to just try out or dry run a SQL command, BUT your SQL client didn't use ANSI double quotes for table and field names? (phpMyAdmin, SQL Server Management Studio)
@@ -8,11 +22,12 @@ This module provides tools to administer the database that drives your SilverStr
 It is very lightweight and not as powerful as phpMyAdmin but it works with all supported database adapters: MySQL, MSSQL, Postgres and SQLite
 This module is designed for developers and in production has to be used with caution if at all.
 
-*toFIX*
+## Open Issues
 
 - *check permission on access*
 
-*toENHANCE*
+## Planned Features
 
-- add more (adapterspecific) tools, e.g. export
-- create models for table/db/fields/etc, at the moment everything is in the controller :(
+- CRUD records in the table browser
+- import/export tables/db
+- backup/restore
