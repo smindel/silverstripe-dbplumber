@@ -22,7 +22,7 @@ This module is designed for developers and in production has to be used with cau
 
 ## Open Issues
 
- * check permission on access
+ * Tiny css glitches in Safari/IE8 (IE6-7 not yet tested)
 
 ## Planned Features
 

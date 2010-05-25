@@ -10,6 +10,8 @@ class DatabaseBrowser extends LeftAndMain {
 
 	function init() {
 		parent::init();
+		if(!Permission::check('ADMIN')) return Security::permissionFailure();
+
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.widget.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.tabs.js');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.theme.css');
@@ -21,6 +23,7 @@ class DatabaseBrowser extends LeftAndMain {
 		Requirements::css("dbplumber/thirdparty/jquery.kiketable.colsizable-1.1.css");
 		Requirements::css("dbplumber/css/DatabaseBrowser_left.css");
 		Requirements::css("dbplumber/css/DatabaseBrowser_right.css");
+
 	}
 	
 	function index() {		
@@ -104,7 +107,6 @@ class DatabaseBrowser extends LeftAndMain {
 			)			
 		);
 	}
-	
 }
 
 function exception_error_handler($errno, $errstr, $errfile, $errline ) {
