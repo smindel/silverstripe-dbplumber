@@ -13,7 +13,13 @@ class DBP_Field extends ViewableData {
 	
 	function Spec() {
 		$fl = DB::fieldList($this->Table->Name);
-		return $fl[$this->Name];
+		if(is_array($fl[$this->Name])) {
+			$out ='';
+			foreach($fl[$this->Name] as $key => $val) $out .= "$key: $val<br />";
+			return $out;
+		} else {
+			return $fl[$this->Name];
+		}
 	}
 	
 	function Table() {
