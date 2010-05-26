@@ -90,7 +90,8 @@ class DatabaseBrowser extends LeftAndMain {
 							$fields->push(new ArrayData(array('Name' => $name)));
 							$head[$name] = true;
 						}
-						$row->push(new ArrayData(array('Val' => htmlentities(substr($cell, 0, 50)))));
+						$cell = strlen($cell) > DBP::$truncate_text_longer ? htmlentities(substr($cell, 0, DBP::$truncate_text_longer)) . '<div class="truncated" />' : htmlentities($cell);
+						$row->push(new ArrayData(array('Val' => $cell)));
 					}
 					$rows->push(new ArrayData(array('Cells' => $row)));
 					// highlight

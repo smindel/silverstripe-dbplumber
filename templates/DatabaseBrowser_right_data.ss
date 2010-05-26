@@ -34,7 +34,7 @@
 						<% control Rows %>
 							<tr class='<% if Even %>even<% else %>odd<% end_if %>'>
 								<% control Cells %>
-									<td class='$Type'>$Val</td>
+									<td class='$Type' rel='$Context'>$Val</td>
 								<% end_control %>
 							</tr>
 						<% end_control %>

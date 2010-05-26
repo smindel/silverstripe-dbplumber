@@ -2,6 +2,8 @@
 
 class DBP {
 	
+	public static $truncate_text_longer = 50;
+	
 	static function select($column, $table, $filter = null, $order = null, $limit = null, $offset = null) {
 		switch(DB::getConn()->getDatabaseServer()) {
 			case 'mssql':

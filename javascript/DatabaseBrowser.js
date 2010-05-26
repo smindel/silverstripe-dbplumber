@@ -87,6 +87,8 @@ function msgbx(text,status) {
 		});
 
 		$('#browse-tab tbody tr').live('click',function(){
+			$('#browse-tab tbody tr').removeClass('current');
+			$(this).addClass('current');
 			$(this).toggleClass('selected');
 		});
 
