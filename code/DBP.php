@@ -3,6 +3,8 @@
 class DBP {
 	
 	public static $truncate_text_longer = 50;
+
+	public static $records_per_page = 10;
 	
 	static function select($column, $table, $filter = null, $order = null, $limit = null, $offset = null) {
 		switch(DB::getConn()->getDatabaseServer()) {

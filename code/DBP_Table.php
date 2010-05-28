@@ -3,10 +3,12 @@
 class DBP_Table extends ViewableData {
 	
 	protected $Name;
+	protected $record;
 	
-	function __construct($name) {
+	function __construct($name, $record = null) {
 		parent::__construct();
 		$this->Name = $name;
+		$this->record = $record;
 	}
 	
 	function Database() {
@@ -21,10 +23,13 @@ class DBP_Table extends ViewableData {
 
 		$fields = new DataObjectSet();
 
-		if(DB::fieldList($this->Name)) {
-			foreach(DB::fieldList($this->Name) as $name => $spec) $fields->push(new DBP_Field($this, $name));
-		} else {
-			foreach(DB::fieldList($this->Name) as $name => $spec) $fields->push(new DBP_Field($this, $name));
+		foreach(DB::fieldList($this->Name) as $name => $spec) {
+			$v = null;
+			if($this->record) {
+				$d = $this->record->Data();
+				$v = $d[$name];
+			}
+			$fields->push(new DBP_Field($this, $name, $v));
 		}
 		
 		return $fields;
@@ -48,14 +53,12 @@ class DBP_Table extends ViewableData {
 			$row = new DataObjectSet();
 			foreach($record as $key => $cell) {
 				if($key == 'rowNo_hide') continue;
-				if(empty($class[$key])) {
-					$field = new DBP_Field($this, $key);
-					$class[$key] = preg_match('/^\w+/i', $field->Spec(), $match) ? strtolower($match[0]) : false;
-				}
+				if(empty($field[$key])) $field[$key] = new DBP_Field($this, $key);
+
 				$cell = strlen($cell) > DBP::$truncate_text_longer ? htmlentities(substr($cell, 0, DBP::$truncate_text_longer)) . '<div class="truncated" />' : htmlentities($cell);
 				$row->push(new ArrayData(array(
 					'Val' => $cell,
-					'Type' => $class[$key],
+					'Type' => $field[$key]->type(),
 					'Context' => $this->Name . '.' . $key . '.' . $record['ID'],
 				)));
 			}

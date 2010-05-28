@@ -7,6 +7,9 @@ class DatabaseBrowser extends LeftAndMain {
 	static $url_rule = '/$Action/$ID';
 	
 	static $menu_title = 'DB Plumber';
+	
+	protected $table;
+	protected $record;
 
 	function init() {
 		parent::init();
@@ -24,6 +27,12 @@ class DatabaseBrowser extends LeftAndMain {
 		Requirements::css("dbplumber/css/DatabaseBrowser_left.css");
 		Requirements::css("dbplumber/css/DatabaseBrowser_right.css");
 
+		if(preg_match('/^(\w+)\.(\w+)\.(\d+)$/i', $this->urlParams['ID'], $match)) {
+			$this->record = new DBP_Record($match[1],$match[3]);
+			$this->table = new DBP_Table($match[1], $this->record);
+		} else if($this->urlParams['ID']) {
+			$this->table = new DBP_Table($this->urlParams['ID']);
+		}
 	}
 	
 	function index() {		
@@ -37,10 +46,19 @@ class DatabaseBrowser extends LeftAndMain {
 	function show() {
 		if(Director::is_ajax()) {
 			$vars = $this->getRequest()->requestVars();
+			$delete = $this->getRequest()->postVar('delete');
+			if($delete) { $this->deleteRecords($delete); }
 			if(isset($vars['start']) || isset($vars['orderdir']) || isset($vars['orderby'])) return $this->customise($this->Table($this->table))->renderWith('DatabaseBrowser_right_data');
 			return $this->renderWith('DatabaseBrowser_right_table');
 		} else {
 			return $this->renderWith('LeftAndMain');
+		}
+	}
+	
+	function deleteRecords($records) {
+		if(!Permission::check('ADMIN')) return Security::permissionFailure();
+		if(is_array($records)) foreach($records as $record) if(preg_match('/^(\w+)\.(\w+)\.(\d+)$/i', $record, $match)) {
+			DB::query('DELETE FROM "' . $match[1] . '" WHERE "' . $match[2] . '" = \'' . $match[3] . '\'');
 		}
 	}
 
@@ -49,7 +67,11 @@ class DatabaseBrowser extends LeftAndMain {
 	}
 
 	function Table() {
-		return $this->urlParams['ID'] ? new DBP_Table($this->urlParams['ID']) : false;
+		return $this->table;
+	}
+	
+	function Record() {
+		return $this->record;
 	}
 
 	function execute() {

@@ -87,13 +87,31 @@ function msgbx(text,status) {
 		});
 
 		$('#browse-tab tbody tr').live('click',function(){
-			$('#browse-tab tbody tr').removeClass('current');
-			$(this).addClass('current');
 			$(this).toggleClass('selected');
+			$('#browse-tab .delete-records').attr("disabled", true);
+			$('#browse-tab tbody tr.selected').each(function(){
+				$('#browse-tab .delete-records').removeAttr("disabled");
+			});
+		});
+
+		$('#browse-tab .delete-records').live('click',function(){
+
+			ids = new Array(); $('#browse-tab tbody tr.selected').each(function(){ ids.push($('td', this).first().attr('id'));	});
+			msgbx('deleting...', 'waiting');
+			$('#browse-tab').load($('a',this).attr('href'), {delete: ids}, function(){
+				$("#right table.kike").kiketable_colsizable(kikeoptions);
+				msgbx('deleted', 'good');
+			});
+			return false;
 		});
 
 		$('#browse-tab tbody tr').live('dblclick',function(){
-			alert($('td', this).first().text());
+			msgbx('loading...', 'waiting');
+			$('#right div.main').load('admin/dbplumber/show/' + $('td', this).first().attr('id') + '#form-tab', function(){
+				msgbx('loaded', 'good');
+				initRight();
+				$("#tabs").tabs('select', 2);
+			});
 		});
 
 		$(window).bind('resize', function () { 

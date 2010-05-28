@@ -4,11 +4,13 @@ class DBP_Field extends ViewableData {
 	
 	protected $Name;
 	protected $Table;
+	protected $value;
 	
-	function __construct($table, $name) {
+	function __construct($table, $name, $value = null) {
 		parent::__construct();
 		$this->Table = $table;
 		$this->Name = $name;
+		$this->value = $value;
 	}
 	
 	function Spec() {
@@ -20,6 +22,14 @@ class DBP_Field extends ViewableData {
 		} else {
 			return $fl[$this->Name];
 		}
+	}
+	
+	function type() {
+		return preg_match('/^\w+/i', $this->Spec(), $match) ? strtolower($match[0]) : false;
+	}
+	
+	function val() {
+		return $this->value;
 	}
 	
 	function Table() {

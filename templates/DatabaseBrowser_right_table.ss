@@ -4,6 +4,7 @@
 		<ul>
 			<li><a class='tabtabs' title="browse-tab">Browse</a></li>
 			<li><a class='tabtabs' title="structure-tab">Structure</a></li>
+			<li><a class='tabtabs' title="form-tab">Form</a></li>
 		</ul>
 		<div id="browse-tab" class='tabbody'>
 			<% include DatabaseBrowser_right_data %>
@@ -25,6 +26,9 @@
 					<% end_control %>
 				</tbody>
 			</table>
+		</div>
+		<div id="form-tab" class='tabbody'>
+			<% include DatabaseBrowser_right_form %>
 		</div>
 	</div>
 <% end_control %>

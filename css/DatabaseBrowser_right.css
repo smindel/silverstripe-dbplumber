@@ -69,23 +69,57 @@ h1 span.small {
 }
 
 #right div.truncated {
+	display:inline;
 	width:10px;
 	height:10px;
-	border:1px solid #bbb;
-	background:red;
+	border-bottom:3px dotted #008;
 }
 
-#right button.pagination a {
+#right button.pagination a,
+#right button.crud-records a {
 	display:block;
 	width:16px;
 	height:16px;
-	background:url(../../sapphire/thirdparty/jquery-ui-themes/base/images/ui-icons_888888_256x240.png) no-repeat 0px 0px;
+	background:url(../../sapphire/thirdparty/jquery-ui-themes/base/images/ui-icons_222222_256x240.png) no-repeat 0px 0px;
 }
 
 #right button.first-page a { background-position:-240px -32px; }
-#right button.prev-page  a { background-position:-96px -32px; }
-#right button.next-page  a { background-position:-32px -32px; }
-#right button.last-page  a { background-position:-208px -32px; }
+#right button.prev-page a { background-position:-96px -32px; }
+#right button.next-page a { background-position:-32px -32px; }
+#right button.last-page a { background-position:-208px -32px; }
+#right button.add-record a { background-position:-16px -128px; background-image:url(../../sapphire/thirdparty/jquery-ui-themes/base/images/ui-icons_2e83ff_256x240.png); }
+#right button.edit-record a { background-position:-64px -112px; background-image:url(../../sapphire/thirdparty/jquery-ui-themes/base/images/ui-icons_2e83ff_256x240.png); }
+#right button.delete-records a { background-position:-176px -96px; background-image:url(../../sapphire/thirdparty/jquery-ui-themes/base/images/ui-icons_cd0a0a_256x240.png); }
+#right button.delete-records:disabled a { background-image:url(../../sapphire/thirdparty/jquery-ui-themes/base/images/ui-icons_888888_256x240.png); }
+
+#right #recordform label {
+	display:block;
+	float:none;
+	margin-bottom:3px;
+	margin-left:0;
+	width:96%;
+	color:#666666;
+	font-size:11px;
+}
+
+#right #recordform div.input {
+	background:none repeat scroll 0 0 #E9E9E9;
+	display:block;
+	padding:3px;
+	width:97%;
+}
+
+#right #recordform div.input input,
+#right #recordform div.input textarea {
+	border:1px solid #A7A7A7;
+	padding:3px;
+	width:99%;
+	font-size:12px;
+}
+
+#right #recordform div.input input[type="radio"] {
+	width:auto;
+}
 
 #ajax_msg {
 	margin-top: 5px;
