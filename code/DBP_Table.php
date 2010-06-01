@@ -90,3 +90,12 @@ class DBP_Table extends ViewableData {
 		return Controller::curr()->Link() . 'show/' . $this->Name;
 	}
 }
+
+class DBP_Table_Controller extends Controller {
+
+	static $url_rule = '/$Model/$Action/$ID';
+	
+	function index($req) {
+		aDebug('yay!'); die();
+	}
+}
