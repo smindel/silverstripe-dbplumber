@@ -2,13 +2,13 @@
 
 class DBP_Table extends ViewableData {
 	
-	protected $Name;
-	protected $record;
+	protected $id;
 	
-	function __construct($name, $record = null) {
+	function __construct($id) {
 		parent::__construct();
-		$this->Name = $name;
-		$this->record = $record;
+		if(preg_match('/^(\w+)$/i', $id, $match)) {
+			$this->id = $match[1];
+		}
 	}
 	
 	function Database() {
@@ -87,15 +87,10 @@ class DBP_Table extends ViewableData {
 	}
 
 	function Link() {
-		return Controller::curr()->Link() . 'show/' . $this->Name;
+		return Controller::curr()->Link() . 'table/show/' . $this->id;
 	}
 }
 
-class DBP_Table_Controller extends Controller {
+class DBP_Table_Controller extends DBP_Controller {
 
-	static $url_rule = '/$Model/$Action/$ID';
-	
-	function index($req) {
-		aDebug('yay!'); die();
-	}
 }

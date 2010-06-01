@@ -8,36 +8,6 @@ class DatabaseBrowser extends LeftAndMain implements NestedController {
 	
 	static $menu_title = 'DB Plumber';
 	
-	protected $table;
-	protected $record;
-
-	function init() {
-		parent::init();
-		if(!Permission::check('ADMIN')) return Security::permissionFailure();
-
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.widget.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.tabs.js');
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.theme.css');
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.tabs.css');
-		
-		Requirements::javascript("dbplumber/javascript/DatabaseBrowser.js");
-		Requirements::javascript("dbplumber/thirdparty/jquery.event.drag-1.4.js");
-		Requirements::javascript("dbplumber/thirdparty/jquery.kiketable.colsizable-1.1.js");
-		Requirements::css("dbplumber/thirdparty/jquery.kiketable.colsizable-1.1.css");
-		Requirements::css("dbplumber/css/DatabaseBrowser_left.css");
-		Requirements::css("dbplumber/css/DatabaseBrowser_right.css");
-
-//		aDebug($this->getRequest()); die();
-		// $this->getNestedController()->
-
-		if(preg_match('/^(\w+)\.(\w+)\.(\d+)$/i', $this->urlParams['ID'], $match)) {
-			$this->record = new DBP_Record($match[1],$match[3]);
-			$this->table = new DBP_Table($match[1], $this->record);
-		} else if($this->urlParams['ID']) {
-			$this->table = new DBP_Table($this->urlParams['ID']);
-		}
-	}
-	
 	function handleRequest(SS_HTTPRequest $request) {
 
 		$this->pushCurrent();
@@ -46,14 +16,6 @@ class DatabaseBrowser extends LeftAndMain implements NestedController {
 		$this->request = $request;
 		$this->response = new SS_HTTPResponse();
 
-		$this->init();
-
-		// If we had a redirection or something, halt processing.
-		if($this->response->isFinished()) {
-			$this->popCurrent();
-			return $this->response;
-		}
-		
 		if($nestedcontroller = $this->getNestedController()) {
 			$response = $nestedcontroller->handleRequest($this->request);
 		} else {
@@ -71,23 +33,21 @@ class DatabaseBrowser extends LeftAndMain implements NestedController {
 	}
 	
 	function getNestedController() {
-		$nestedmodelclass = $this->urlParams['Model'] ? 'DBP_' . ucfirst($this->urlParams['Model']) : false;
-		$nestedcontrollerclass = $this->urlParams['Model'] ? 'DBP_' . ucfirst($this->urlParams['Model']) . '_Controller' : false;
+		$nestedmodelclass = $this->urlParams['Model'] ? 'DBP_' . ucfirst(strtolower($this->urlParams['Model'])) : false;
+		$nestedcontrollerclass = $this->urlParams['Model'] ? 'DBP_' . ucfirst(strtolower($this->urlParams['Model'])) . '_Controller' : false;
 		if(class_exists($nestedcontrollerclass)) {
+			$object = null;
 			if(class_exists($nestedmodelclass) && $this->urlParams['ID']) {
 				$object = new $nestedmodelclass($this->urlParams['ID']);
 			}
 			return new $nestedcontrollerclass($object);
 		}
-		aDebug('no luck');
-		aDebug($nestedcontrollerclass);
-		aDebug($this->request);
 		return false;
 	}
 	
 	function index() {		
 		if(Director::is_ajax()) {
-			return $this->renderWith('DatabaseBrowser_right_db');
+			return $this->renderWith('DBP_Database');
 		} else {
 			return $this->renderWith('LeftAndMain');
 		}

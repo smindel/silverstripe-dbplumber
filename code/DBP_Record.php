@@ -2,15 +2,17 @@
 
 class DBP_Record extends ViewableData {
 	
-	protected $ID;
-	protected $Table;
+	protected $id;
+	protected $table;
 	protected $data;
 	
-	function __construct($table, $id) {
+	function __construct($id) {
 		parent::__construct();
-		$this->Table = $table;
-		$this->ID = $ID;
-		$this->data = DB::query('SELECT * FROM "' . $table . '" WHERE "ID" = \'' . $id . '\'')->first();
+		if(preg_match('/^(\w+)\.(\d+)$/i', $id, $match)) {
+			$this->table = new DBP_Table($match[1]);
+			$this->id = $match[2];
+			$this->data = DB::query('SELECT * FROM "' . $this->table . '" WHERE "ID" = \'' . $this->id . '\'')->first();
+		}
 	}
 	
 	function Data() {
@@ -18,6 +20,10 @@ class DBP_Record extends ViewableData {
 	}
 	
 	function Table() {
-		return $this->Table;
+		return $this->table;
 	}
+}
+
+class DBP_Record_Controller extends DBP_Controller {
+
 }
