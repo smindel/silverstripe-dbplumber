@@ -2,15 +2,14 @@
 
 class DBP_Field extends ViewableData {
 	
-	protected $Name;
+	protected $id;
 	protected $Table;
 	protected $value;
 	
 	function __construct($id) {
 		parent::__construct();
 		if(preg_match('/^(\w+)\.(\w+)$/i', $id, $match)) {
-			$this->table = new DBP_Table($match[1]);
-			$this->id = $match[2];
+			$this->id = $id;
 		}
 	}
 	
@@ -43,8 +42,4 @@ class DBP_Field extends ViewableData {
 		$vars['orderdir'] = (isset($vars['orderdir']) && $vars['orderdir'] == 'DESC') ? 'DESC' : 'ASC';
 		return $vars['orderdir'];
 	}
-}
-
-class DBP_Field_Controller extends DBP_Controller {
-
 }

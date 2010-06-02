@@ -2,21 +2,25 @@
 
 class DBP_Table extends ViewableData {
 	
-	protected $id;
+	protected $Name;
 	
-	function __construct($id) {
+	function __construct($name) {
 		parent::__construct();
-		if(preg_match('/^(\w+)$/i', $id, $match)) {
-			$this->id = $match[1];
+		if(preg_match('/^(\w+)$/i', $name, $match)) {
+			$this->Name = $match[1];
 		}
 	}
 	
-	function Database() {
-		return DB::getConn()->currentDatabase();
+	function Name() {
+		return $this->Name;
+	}
+	
+	function TEST() {
+		return "wOOt";
 	}
 	
 	function Selected() {
-		return Controller::curr()->urlParams['ID'] == $this->Name;
+		return preg_match('/' . $this->Name . '(\..+)/', Controller::curr()->urlParams['ID']);
 	}
 	
 	function Fields() {
@@ -29,7 +33,7 @@ class DBP_Table extends ViewableData {
 				$d = $this->record->Data();
 				$v = $d[$name];
 			}
-			$fields->push(new DBP_Field($this, $name, $v));
+			$fields->push(new DBP_Field($this->Name . '.' . $name));
 		}
 		
 		return $fields;
@@ -87,10 +91,10 @@ class DBP_Table extends ViewableData {
 	}
 
 	function Link() {
-		return Controller::curr()->Link() . 'table/show/' . $this->id;
+		return Controller::curr()->Link() . 'table/show/' . $this->Name;
 	}
-}
 
-class DBP_Table_Controller extends DBP_Controller {
-
+	function forTemplate() {
+		return $this->renderWith($this->class);
+	}
 }

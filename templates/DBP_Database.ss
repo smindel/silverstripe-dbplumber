@@ -1,4 +1,4 @@
-	<h1><span class="small">Database</span> $Database.Name</h1>
+	<h1><span class="small">Database</span> $Name</h1>
 	<div id="tabs">
 		<ul>
 			<li><a class='tabtabs' title="info-tab">Info</a></li>
@@ -8,15 +8,15 @@
 			<table>
 				<tr class='odd'>
 					<td>Database Type</td>
-					<td>$Database.Type</td>
+					<td>$Type</td>
 				</tr>
 				<tr class='even'>
 					<td>Database Version</td>
-					<td>$Database.Version</td>
+					<td>$Version</td>
 				</tr>
 				<tr class='odd'>
 					<td>Database Adapter</td>
-					<td>$Database.Adapter</td>
+					<td>$Adapter</td>
 				</tr>
 			</table>
 		</div>

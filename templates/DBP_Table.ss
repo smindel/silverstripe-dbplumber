@@ -1,4 +1,3 @@
-<% control Table %>
 	<h1><span class="small">Table</span> $Name</h1>
 	<div id="tabs">
 		<ul>
@@ -31,4 +30,3 @@
 			<% include DatabaseBrowser_right_form %>
 		</div>
 	</div>
-<% end_control %>

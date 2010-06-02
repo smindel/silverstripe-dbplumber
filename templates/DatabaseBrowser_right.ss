@@ -1,8 +1,8 @@
 <div class='main'>
-	<% if Table %>
-		<% include DatabaseBrowser_right_table %>
+	<% if requested(Table)  %>
+		$Table
 	<% else %>
-		<% include DatabaseBrowser_right_db %>
+		$Database
 	<% end_if %>
 </div>
 <div id='ajax_msg' class='ui-corner-all waiting'>msg</div>
