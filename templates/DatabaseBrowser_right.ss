@@ -1,5 +1,5 @@
 <div class='main'>
-	<% if requested(Table)  %>
+	<% if Table  %>
 		$Table
 	<% else %>
 		$Database

@@ -6,7 +6,7 @@
 			<li><a class='tabtabs' title="form-tab">Form</a></li>
 		</ul>
 		<div id="browse-tab" class='tabbody'>
-			<% include DatabaseBrowser_right_data %>
+			<% include DBP_Table_index %>
 		</div>
 		<div id="structure-tab" class='tabbody'>
 			<table>

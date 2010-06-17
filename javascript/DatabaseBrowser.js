@@ -1,5 +1,6 @@
 var timeout;
 
+// show ajaxy status text on the bottom of right
 function msgbx(text,status) {
 	var $ = jQuery;
 	$('#ajax_msg').text(text);
@@ -24,11 +25,15 @@ function msgbx(text,status) {
 		$('.tabtabs').each(function(){
 			$(this).attr('href', '#' + $(this).attr('title'));
 		});
+		$("#tabs").livequery(function(){$(this).tabs()});
+		$("#right table.kike").livequery(function(){$(this).kiketable_colsizable(kikeoptions)});
+
 		$("#tabs").tabs();
 		$("#right table.kike").kiketable_colsizable(kikeoptions);
 		setSizes();
 	}
 
+	// set the proper sizes for tabs and table list
 	function setSizes() {
 		$('#dbb_table_list').height($('#left').innerHeight() - $('#lefthead').height());
 		$('#tabs').height($('#right').height() - $('#right .main > h1').height() - parseInt($('#right .main > h1').css('marginTop')) - 26);
@@ -38,6 +43,7 @@ function msgbx(text,status) {
 
 	$(document).ready(function() {
 
+		// select a table on the left
 		$('#dbb_table_list li').live('click', function() {
 			$('#dbb_table_list li').removeClass('selected');
 			$(this).addClass('selected');
@@ -49,6 +55,7 @@ function msgbx(text,status) {
 			return false;
 		});
 
+		// select the database on the left
 		$('#lefthead').live('click', function() {
 			$('#dbb_table_list li').removeClass('selected');
 			msgbx('loading database ' + $(this).text(), 'waiting');
@@ -59,6 +66,7 @@ function msgbx(text,status) {
 			return false;
 		});
 
+		// submit a custom query on the right
 		$('#sql_form').live('submit', function() {
 			msgbx('execute statement', 'waiting');
 			$('#sql-tab').load($(this).attr('action'), $(this).serialize(),function(){
@@ -68,6 +76,7 @@ function msgbx(text,status) {
 			return false;
 		});
 		
+		// paginate through the records of a table
 		$('#browse-tab .pagination').live('click',function(){
 			msgbx('loading...', 'waiting');
 			$('#browse-tab').load($('a',this).attr('href'), function(){
@@ -77,6 +86,7 @@ function msgbx(text,status) {
 			return false;
 		});
 
+		// order the records of a table by the selected field
 		$('#browse-tab .fieldname a').live('click',function(){
 			msgbx('loading...', 'waiting');
 			$('#browse-tab').load($(this).attr('href'), function(){
@@ -86,6 +96,7 @@ function msgbx(text,status) {
 			return false;
 		});
 
+		// select a record
 		$('#browse-tab tbody tr').live('click',function(){
 			$(this).toggleClass('selected');
 			$('#browse-tab .delete-records').attr("disabled", true);
@@ -94,17 +105,24 @@ function msgbx(text,status) {
 			});
 		});
 
+		// delete a selected record
 		$('#browse-tab .delete-records').live('click',function(){
-
-			ids = new Array(); $('#browse-tab tbody tr.selected').each(function(){ ids.push($('td', this).first().attr('id'));	});
+			ids = new Array(); $('#browse-tab tbody tr.selected').each(function(){ ids.push($(this).attr('id'));	});
 			msgbx('deleting...', 'waiting');
-			$('#browse-tab').load($('a',this).attr('href'), {delete: ids}, function(){
-				$("#right table.kike").kiketable_colsizable(kikeoptions);
-				msgbx('deleted', 'good');
-			});
+			
+			
+			$.post($('a',this).attr('href'), {delete: ids}, function(data, textStatus, XMLHttpRequest){
+				msgbx(data.msg, data.status);
+				$('#browse-tab').load(data.redirect, function(){
+					$("#right table.kike").kiketable_colsizable(kikeoptions);
+					msgbx('loaded', 'good');
+				});
+			}, 'json');
+			
 			return false;
 		});
 
+		// load a record into the edit form
 		$('#browse-tab tbody tr').live('dblclick',function(){
 			msgbx('loading...', 'waiting');
 			$('#right div.main').load('admin/dbplumber/show/' + $('td', this).first().attr('id') + '#form-tab', function(){
@@ -114,18 +132,17 @@ function msgbx(text,status) {
 			});
 		});
 
+		// keep track of window resizing ...
 		$(window).bind('resize', function () { 
 			setSizes();
 		});
 
-		$(window).bind('resize', function () { 
-			setSizes();
-		});
-		
+		// ... and again.
 		$('#separator').bind('mouseup', function () { 
 			setSizes();
 		});
 		
+		// trigger init
 		initRight();
 
 	});

@@ -38,3 +38,7 @@ class DBP_Database extends ViewableData {
 	}
 
 }
+
+class DBP_Database_Controller extends DBP_Controller {
+
+}

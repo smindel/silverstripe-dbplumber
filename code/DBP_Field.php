@@ -2,25 +2,25 @@
 
 class DBP_Field extends ViewableData {
 	
-	protected $id;
+	protected $Label;
 	protected $Table;
-	protected $value;
 	
 	function __construct($id) {
 		parent::__construct();
 		if(preg_match('/^(\w+)\.(\w+)$/i', $id, $match)) {
-			$this->id = $id;
+			$this->Table = $match[1];
+			$this->Label = $match[2];
 		}
 	}
 	
 	function Spec() {
-		$fl = DB::fieldList($this->Table->Name);
-		if(is_array($fl[$this->Name])) {
+		$fl = DB::fieldList($this->Table);
+		if(is_array($fl[$this->Label])) {
 			$out ='';
-			foreach($fl[$this->Name] as $key => $val) $out .= "$key: $val<br />";
+			foreach($fl[$this->Label] as $key => $val) $out .= "$key: $val<br />";
 			return $out;
 		} else {
-			return $fl[$this->Name];
+			return $fl[$this->Label];
 		}
 	}
 	
@@ -28,12 +28,12 @@ class DBP_Field extends ViewableData {
 		return preg_match('/^\w+/i', $this->Spec(), $match) ? strtolower($match[0]) : false;
 	}
 	
-	function val() {
-		return $this->value;
-	}
-	
 	function Table() {
 		return $this->Table;
+	}
+
+	function Label() {
+		return $this->Label;
 	}
 
 	function Ordered() {
