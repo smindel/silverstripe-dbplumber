@@ -67,6 +67,8 @@ class DatabaseBrowser extends LeftAndMain {
 
 	function show(SS_HTTP_Request $request) { return $this->delegate($request); }
 	function delete(SS_HTTP_Request $request) { return $this->delegate($request); }
+	function execute(SS_HTTP_Request $request) { return $this->delegate($request); }
+	function form(SS_HTTP_Request $request) { return $this->delegate($request); }
 	
 	protected function delegate(SS_HTTP_Request $request) {
 		if(array_search(strtolower($request->Param('Control')), self::$managed_models) === false) throw new Exception('Invalid Sub Controller "' . $request->Param('Control') . '"');

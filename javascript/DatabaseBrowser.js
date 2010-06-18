@@ -110,7 +110,6 @@ function msgbx(text,status) {
 			ids = new Array(); $('#browse-tab tbody tr.selected').each(function(){ ids.push($(this).attr('id'));	});
 			msgbx('deleting...', 'waiting');
 			
-			
 			$.post($('a',this).attr('href'), {delete: ids}, function(data, textStatus, XMLHttpRequest){
 				msgbx(data.msg, data.status);
 				$('#browse-tab').load(data.redirect, function(){
@@ -125,10 +124,11 @@ function msgbx(text,status) {
 		// load a record into the edit form
 		$('#browse-tab tbody tr').live('dblclick',function(){
 			msgbx('loading...', 'waiting');
-			$('#right div.main').load('admin/dbplumber/show/' + $('td', this).first().attr('id') + '#form-tab', function(){
+			var recid = $(this).attr('id');
+			$("#tabs").tabs('select', 2);
+			$('#form-tab').load('admin/dbplumber/record/form/' + recid, { oldid: recid }, function(){
 				msgbx('loaded', 'good');
 				initRight();
-				$("#tabs").tabs('select', 2);
 			});
 		});
 

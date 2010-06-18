@@ -19,7 +19,7 @@
 				<tbody>
 					<% control Fields %>
 						<tr class='<% if Even %>even<% else %>odd<% end_if %>'>
-							<td>$Name</td>
+							<td>$Label</td>
 							<td>$Spec</td>
 						</tr>
 					<% end_control %>
@@ -27,6 +27,6 @@
 			</table>
 		</div>
 		<div id="form-tab" class='tabbody'>
-			<% include DatabaseBrowser_right_form %>
+			<% include DPB_Record_form %>
 		</div>
 	</div>

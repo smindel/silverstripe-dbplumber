@@ -10,6 +10,8 @@ class DBP_Field extends ViewableData {
 		if(preg_match('/^(\w+)\.(\w+)$/i', $id, $match)) {
 			$this->Table = $match[1];
 			$this->Label = $match[2];
+		} else {
+			$this->Label = $id;
 		}
 	}
 	

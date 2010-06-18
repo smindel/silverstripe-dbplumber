@@ -15,7 +15,8 @@ class DBP_Record extends ViewableData {
 		}
 	}
 	
-	function Data() {
+	function Data($data = null) {
+		if(is_array($data)) $this->data = $data;
 		return $this->data;
 	}
 	
@@ -60,6 +61,11 @@ class DBP_Record_Controller extends DBP_Controller {
 			DB:: query('DELETE FROM "' . $record->Table()->Name() . '" WHERE "ID" = \'' . $record->ID() . '\'');
 		}
 		return json_encode(array('msg' => 'Records deleted', 'status' => 'good', 'redirect' => $record->Table()->DBPLink() . 'table/index/' . $record->Table()->Name()));
+	}
+
+	function form($request) {
+		aDebug($this->instance);
+		return $this->instance->renderWith('DBP_Record_form');
 	}
 
 }

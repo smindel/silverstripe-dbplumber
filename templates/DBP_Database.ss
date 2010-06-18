@@ -21,6 +21,6 @@
 			</table>
 		</div>
 		<div id="sql-tab" class='tabbody'>
-			<% include DatabaseBrowser_right_sql %>
+			<% include DBP_Database_sql %>
 		</div>
 	</div>
