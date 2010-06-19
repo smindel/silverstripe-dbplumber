@@ -16,6 +16,7 @@ class DBP_Field extends ViewableData {
 	}
 	
 	function Spec() {
+		if(!$this->Table) return false;
 		$fl = DB::fieldList($this->Table);
 		if(is_array($fl[$this->Label])) {
 			$out ='';

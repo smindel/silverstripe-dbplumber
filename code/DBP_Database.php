@@ -49,6 +49,7 @@ class DBP_Database_Controller extends DBP_Controller {
 
 		$vars = $this->getRequest()->requestVars();
 		if(empty($vars['query'])) return false;
+		$msg = '';
 		$error = false;
 		$query = $vars['query'];
 		$fields = new DataObjectSet();
