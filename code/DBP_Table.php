@@ -33,7 +33,6 @@ class DBP_Table extends ViewableData {
 	}
 
 	function NewRecord() {
-//		return new DBP_Record();
 		return new DBP_Record($this->Name);
 	}
 
