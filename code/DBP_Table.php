@@ -32,6 +32,11 @@ class DBP_Table extends ViewableData {
 		return @$vars[$key];
 	}
 
+	function NewRecord() {
+//		return new DBP_Record();
+		return new DBP_Record($this->Name);
+	}
+
 	function Records() {
 
 		$vars = Controller::curr()->getRequest()->requestVars();

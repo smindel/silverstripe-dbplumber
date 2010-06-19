@@ -27,6 +27,8 @@
 			</table>
 		</div>
 		<div id="form-tab" class='tabbody'>
-			<% include DPB_Record_form %>
+			<% control NewRecord %>
+				<% include DBP_Record_form %>
+			<% end_control %>
 		</div>
 	</div>

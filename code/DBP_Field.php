@@ -30,6 +30,14 @@ class DBP_Field extends ViewableData {
 		return preg_match('/^\w+/i', $this->Spec(), $match) ? strtolower($match[0]) : false;
 	}
 	
+	function isText() {
+		return $this->type() == 'text' || $this->type() == 'mediumtext';
+	}
+	
+	function isBool() {
+		return $this->type() == 'bool';
+	}
+	
 	function Table() {
 		return new DBP_Table($this->Table);
 	}

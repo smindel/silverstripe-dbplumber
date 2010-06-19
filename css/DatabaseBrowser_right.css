@@ -76,6 +76,7 @@ h1 span.small {
 }
 
 #right button.pagination a,
+#right button.saverecord a,
 #right button.crud-records a {
 	display:block;
 	width:16px;
@@ -91,6 +92,7 @@ h1 span.small {
 #right button.edit-record a { background-position:-64px -112px; background-image:url(../../sapphire/thirdparty/jquery-ui-themes/base/images/ui-icons_2e83ff_256x240.png); }
 #right button.delete-records a { background-position:-176px -96px; background-image:url(../../sapphire/thirdparty/jquery-ui-themes/base/images/ui-icons_cd0a0a_256x240.png); }
 #right button.delete-records:disabled a { background-image:url(../../sapphire/thirdparty/jquery-ui-themes/base/images/ui-icons_888888_256x240.png); }
+#right button.saverecord a { background-image:none; width:60px; }
 
 #right #recordform label {
 	display:block;

@@ -33,7 +33,7 @@
 						<tr>
 							<% control Fields %>
 								<% if Table %>
-									<td class='fieldname<% if Ordered %> order$Ordered<% end_if %>'><a href='{$Table.DBPLink}table/index/{$Table.Name}?start=$Table.requestVar(start)&orderby=$Label&orderdir=<% if Ordered == ASC %>DESC<% else %>ASC<% end_if %>'>$Label ($Ordered)</a></td>
+									<td class='fieldname<% if Ordered %> order$Ordered<% end_if %>'><a href='{$Table.DBPLink}table/index/{$Table.Name}?start=$Table.requestVar(start)&orderby=$Label&orderdir=<% if Ordered == ASC %>DESC<% else %>ASC<% end_if %>'>$Label</a></td>
 								<% else %>
 									<td>$Label</td>
 								<% end_if %>

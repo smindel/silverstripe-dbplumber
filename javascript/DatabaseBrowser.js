@@ -126,11 +126,27 @@ function msgbx(text,status) {
 		$('#browse-tab tbody tr').live('dblclick',function(){
 			msgbx('loading...', 'waiting');
 			var recid = $(this).attr('id');
-			$("#tabs").tabs('select', 2);
 			$('#form-tab').load('admin/dbplumber/record/form/' + recid, { oldid: recid }, function(){
+				$("#tabs").tabs('select', 2);
 				msgbx('loaded', 'good');
 				initRight();
 			});
+		});
+
+		// save a record 
+		$('#recordform').live('submit',function(){
+			msgbx('saving...', 'waiting');
+			var recid = $('#oldid').val();
+			var url = $('.saverecord a').attr('href');
+			var redirect = $(this).attr('action');
+			$.post(url, $(this).serialize(), function(){
+				msgbx('saved', 'good');
+				$('#form-tab').load(redirect, function(){
+					msgbx('loaded', 'good');
+					initRight();
+				});
+			});
+			return false;
 		});
 
 		// keep track of window resizing ...
