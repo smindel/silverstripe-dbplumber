@@ -64,7 +64,7 @@ class DBP_Record_Controller extends DBP_Controller {
 	}
 
 	function form($request) {
-		aDebug($this->instance);
+		Debug::dump($this->instance);
 		return $this->instance->renderWith('DBP_Record_form');
 	}
 

@@ -58,7 +58,8 @@ class DBP_Table extends ViewableData {
 			'start' => $start, 
 			'length' => DBP::$records_per_page,
 			'end' => $end,
-			'orderlink' => 'orderby=' . $this->requestVar('orderby') . '&orderdir=' . $this->requestVar('orderdir'),
+			'orderby' => $this->requestVar('orderby'),
+			'orderdir' => $this->requestVar('orderdir'),
 		);
 		if($start > 0) { $pagination['firstlink'] = 'start=0'; $pagination['prevlink'] = 'start=' . ($start - DBP::$records_per_page); }
 		if(isset($pagination['prevlink']) && $pagination['prevlink'] < 0) $pagination['prevlink'] = 'start=0'; 

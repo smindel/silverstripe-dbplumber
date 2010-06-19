@@ -108,15 +108,16 @@ function msgbx(text,status) {
 		// delete a selected record
 		$('#browse-tab .delete-records').live('click',function(){
 			ids = new Array(); $('#browse-tab tbody tr.selected').each(function(){ ids.push($(this).attr('id'));	});
+			var redirect = $('#url').val() + '?start=' + $('#start').val() + '&orderby=' + $('#orderby').val() + '&orderdir=' + $('#orderdir').val();
 			msgbx('deleting...', 'waiting');
 			
-			$.post($('a',this).attr('href'), {delete: ids}, function(data, textStatus, XMLHttpRequest){
-				msgbx(data.msg, data.status);
-				$('#browse-tab').load(data.redirect, function(){
-					$("#right table.kike").kiketable_colsizable(kikeoptions);
+			$.post($('a',this).attr('href'), {delete: ids, redirect: redirect}, function(){
+				msgbx('deleted', 'good');
+				$('#browse-tab').load(redirect, function(){
 					msgbx('loaded', 'good');
+					$("#right table.kike").kiketable_colsizable(kikeoptions);
 				});
-			}, 'json');
+			});
 			
 			return false;
 		});
