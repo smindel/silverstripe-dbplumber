@@ -62,7 +62,7 @@ class DBP_Database_Controller extends DBP_Controller {
 		}
 		restore_error_handler();
 
-		if($results) {
+		if(isset($results) && $results) {
 			if(0) {
 				// @todo: add routine to determine the number of affected records on a write query
 				// no hook for the result ;(
