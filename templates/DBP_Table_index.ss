@@ -20,6 +20,7 @@
 				<% end_if %>
 				<form>
 				<input type='hidden' id='url' name='url' value='admin/dbplumber/table/index/$Name'>
+				<input type='hidden' id='table' name='table' value='$Name'>
 				<input type='hidden' id='start' name='start' value='$Pagination.start'>
 				<input type='hidden' id='orderby' name='orderby' value='$Pagination.orderby'>
 				<input type='hidden' id='orderdir' name='orderdir' value='$Pagination.orderdir'>

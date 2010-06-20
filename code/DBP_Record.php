@@ -99,7 +99,7 @@ class DBP_Record_Controller extends DBP_Controller {
 		}
 		$record->data($data);
 		$record->save();
-		return json_encode(array('msg' => 'Record save', 'status' => 'good'));
+		return json_encode(array('msg' => 'Record saved', 'status' => 'good', 'id' => $record->ID()));
 	}
 
 	function form($request) {

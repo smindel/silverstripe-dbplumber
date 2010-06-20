@@ -32,7 +32,8 @@ class DBP_Table extends ViewableData {
 		return @$vars[$key];
 	}
 
-	function NewRecord() {
+	function Record() {
+		if($id = $this->requestVar('record')) return new DBP_Record($this->Name . ".$id");
 		return new DBP_Record($this->Name);
 	}
 

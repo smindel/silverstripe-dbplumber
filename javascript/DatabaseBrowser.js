@@ -139,13 +139,21 @@ function msgbx(text,status) {
 			var recid = $('#oldid').val();
 			var url = $('.saverecord a').attr('href');
 			var redirect = $(this).attr('action');
-			$.post(url, $(this).serialize(), function(){
-				msgbx('saved', 'good');
-				$('#form-tab').load(redirect, function(){
-					msgbx('loaded', 'good');
-					initRight();
-				});
-			});
+			$.post(
+				url,
+				$(this).serialize(),
+				function(data){
+					alert(data.id);
+					msgbx('saved', 'good');
+					var redirect = 'admin/dbplumber/table/show/' + $('#table').val() + '?start=' + $('#start').val() + '&orderby=' + $('#orderby').val() + '&orderdir=' + $('#orderdir').val() + '&record=' + data.id + '#form-tab'
+					$('#right div.main').load(redirect , function(){
+						msgbx('loaded', 'good');
+						initRight();
+						$("#tabs").tabs('select', 2);
+					});
+				},
+				'json'
+			);
 			return false;
 		});
 
