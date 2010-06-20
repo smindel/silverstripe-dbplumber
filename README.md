@@ -36,7 +36,7 @@ It is not as powerful as phpMyAdmin but it is very lightweight and works with al
 
 ## Open Issues
 
- * Tiny css glitches in Safari/IE8 (IE6-7 not yet tested)
+ * Tiny css glitches and misbehaving js in Safari/IE7/8 (IE6 not yet tested)
 
 ## Planned Features
 
