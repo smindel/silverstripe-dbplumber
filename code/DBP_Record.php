@@ -83,7 +83,7 @@ class DBP_Record extends ViewableData {
 class DBP_Record_Controller extends DBP_Controller {
 
 	function delete($request) {
-		foreach($request->postVar('delete') as $id) {
+		foreach($request->postVar('ids') as $id) {
 			$record = new DBP_Record($id);
 			DB:: query('DELETE FROM "' . $record->Table() . '" WHERE "ID" = \'' . $record->ID() . '\'');
 		}

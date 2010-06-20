@@ -111,7 +111,7 @@ function msgbx(text,status) {
 			var redirect = $('#url').val() + '?start=' + $('#start').val() + '&orderby=' + $('#orderby').val() + '&orderdir=' + $('#orderdir').val();
 			msgbx('deleting...', 'waiting');
 			
-			$.post($('a',this).attr('href'), {delete: ids, redirect: redirect}, function(){
+			$.post($('a',this).attr('href'), {ids: ids, redirect: redirect}, function(){
 				msgbx('deleted', 'good');
 				$('#browse-tab').load(redirect, function(){
 					msgbx('loaded', 'good');
