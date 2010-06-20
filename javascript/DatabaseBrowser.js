@@ -143,7 +143,6 @@ function msgbx(text,status) {
 				url,
 				$(this).serialize(),
 				function(data){
-					alert(data.id);
 					msgbx('saved', 'good');
 					var redirect = 'admin/dbplumber/table/show/' + $('#table').val() + '?start=' + $('#start').val() + '&orderby=' + $('#orderby').val() + '&orderdir=' + $('#orderdir').val() + '&record=' + data.id + '#form-tab'
 					$('#right div.main').load(redirect , function(){
