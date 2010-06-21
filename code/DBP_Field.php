@@ -27,16 +27,28 @@ class DBP_Field extends ViewableData {
 		}
 	}
 	
+	function datatype() {
+		if(!$this->Table) return false;
+		$fl = DB::fieldList($this->Table);
+		if(is_array($fl[$this->Label])) {
+			$out ='';
+			foreach($fl[$this->Label] as $key => $val) $out .= "$key: $val<br />";
+			return $fl[$this->Label]['data_type'];
+		} else {
+			return $fl[$this->Label];
+		}
+	}
+	
 	function type() {
-		return preg_match('/^\w+/i', $this->Spec(), $match) ? strtolower($match[0]) : false;
+		return preg_match('/^\w+/i', $this->datatype(), $match) ? strtolower($match[0]) : false;
 	}
 	
 	function isText() {
-		return $this->type() == 'text' || $this->type() == 'mediumtext';
+		return $this->type() == 'text' || $this->type() == 'mediumtext' || substr($this->datatype(),0,13) == 'nvarchar(max)';
 	}
 	
 	function isBool() {
-		return $this->type() == 'bool';
+		return $this->type() == 'bool' || $this->type() == 'bit';
 	}
 	
 	function Table() {
