@@ -45,7 +45,7 @@
 						<% control Records %>
 							<tr class='<% if Even %>even<% else %>odd<% end_if %>'<% if Table %> id='{$Table}.{$ID}'<% end_if %>>
 								<% control Cells %>
-									<td class='$Column.type'>$Value</td>
+									<td class='$Column.type'>$Value.truncated</td>
 								<% end_control %>
 							</tr>
 						<% end_control %>

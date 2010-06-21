@@ -26,9 +26,9 @@ class DBP_Record extends ViewableData {
 	function Cells() {
 		$cells = new DataObjectSet();
 		foreach($this->data as $f => $v) {
-			$v = htmlentities($v);
-			$v = strlen($v) > 64 ? substr($v,0,63) . '<span class="truncated">&hellip;</span>' : $v;
-			$cells->push(new ArrayData(array('Column' => new DBP_Field($this->table . '.' . $f), 'Value' => $v)));
+			$truncate = htmlentities($v);
+			$truncate = strlen($truncate) > 64 ? substr($truncate,0,63) . '<span class="truncated">&hellip;</span>' : $truncate;
+			$cells->push(new ArrayData(array('Column' => new DBP_Field($this->table . '.' . $f), 'Value' => array('raw' => $v, 'truncated' => $truncate))));
 		}
 		return $cells;
 	}
