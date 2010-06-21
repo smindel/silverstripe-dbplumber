@@ -94,6 +94,36 @@ class DBP_Database_Controller extends DBP_Controller {
 		
 		return $records->renderWith('DBP_Database_sql');
 	}
+	
+	function export($request) {
+		switch($request->postVar('exporttype')) {
+			case 'backup':
+				$this->backup($request->postVar('tables'));
+				break;
+		}
+	}
+	
+	function backup($tables) {
+		$commands = array();
+		foreach($tables as $table) {
+			$fields = array();
+			$commands[] = 'DELETE FROM "' . $table . '";';
+			foreach(DB::fieldList($table) as $name => $spec) $fields[] = $name;
+			foreach(DB::query('SELECT * FROM "' . $table . '"') as $record) {
+				$cells = array();
+				foreach($record as $cell) $cells[] = str_replace("'", "\\'", $cell);
+				$commands[] = 
+					"INSERT INTO \"$table\" (\"" . 
+					implode('", "', $fields) . 
+					"\") VALUES ('" . 
+					implode("', '", $cells) . 
+					"');";
+			}
+		}
+		header("Content-type: text/sql; charset=utf-8");
+		header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '.sql"');
+		foreach($commands as $command) echo $command . "\r\n";
+	}
 }
 
 function exception_error_handler($errno, $errstr, $errfile, $errline ) {

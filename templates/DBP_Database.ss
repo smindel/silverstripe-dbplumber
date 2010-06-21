@@ -3,6 +3,7 @@
 		<ul>
 			<li><a class='tabtabs' title="info-tab">Info</a></li>
 			<li><a class='tabtabs' title="sql-tab">SQL</a></li>
+			<li><a class='tabtabs' title="port-tab">Import / Export</a></li>
 		</ul>
 		<div id="info-tab" class='tabbody'>
 			<table>
@@ -22,5 +23,24 @@
 		</div>
 		<div id="sql-tab" class='tabbody'>
 			<% include DBP_Database_sql %>
+		</div>
+		<div id="port-tab" class='tabbody'>
+			<form action='admin/dbplumber/database/export' method="post">
+				<div>
+					<label for="tablenames">Tables to export</label>
+					<div class="input">
+						<select id='tablenames' name="tables[]" size="10" MULTIPLE>
+							<% control Tables %>
+								<option value="$Name" selected="selected">$Name</option>
+							<% end_control %>
+						</select>
+					</div>
+				</div>
+				<div>
+					<label for="exporttype">Export type</label>
+					<div class="input"><input id='exporttype' name='exporttype' value='backup' type="radio" checked="checked"> Backup (SQL DELETEs and INSERTs)</div>
+				</div>
+				<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only export" aria-disabled="false"><a href='#'>export</a></button>
+			</form>
 		</div>
 	</div>
