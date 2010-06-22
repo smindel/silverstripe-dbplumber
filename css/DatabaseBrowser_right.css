@@ -15,6 +15,10 @@ h1 span.small {
 	height:25px;
 }
 
+	.ui-tabs-nav a {
+		line-height:13px;
+	}
+
 .tabbody {
 	width:90%;
 	height:100%;

@@ -15,5 +15,5 @@
 			<% end_if %>
 		</div>
 	<% end_control %>
-	<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only saverecord" aria-disabled="false"><a href='{$DBPLink}record/save/{$Table}.{$ID}' onclick='return false'><% if ID %>update<% else %>insert<% end_if %></a></button>
+	<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only saverecord" aria-disabled="false" type="submit"><a rel='{$DBPLink}record/save/{$Table}.{$ID}'><% if ID %>update<% else %>insert<% end_if %></a></button>
 </form>

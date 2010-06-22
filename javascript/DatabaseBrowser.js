@@ -137,7 +137,7 @@ function msgbx(text,status) {
 		$('#recordform').live('submit',function(){
 			msgbx('saving...', 'waiting');
 			var recid = $('#oldid').val();
-			var url = $('.saverecord a').attr('href');
+			var url = $('.saverecord a').attr('rel');
 			var redirect = $(this).attr('action');
 			$.post(
 				url,
