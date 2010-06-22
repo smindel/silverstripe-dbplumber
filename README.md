@@ -36,7 +36,7 @@ It is not as powerful as phpMyAdmin but it is very lightweight and works with al
 
 ## Open Issues
 
- * Tiny css glitches and misbehaving js in Safari/IE
+ * Misbehaving js in IE
  * DB null is not yet treated properly when you insert/update a record through the form and in the exporter
 
 ## Planned Features
