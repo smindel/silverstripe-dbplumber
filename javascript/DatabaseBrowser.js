@@ -168,6 +168,10 @@ function msgbx(text,status) {
 		
 		// trigger init
 		initRight();
+		
+		if($.browser.msie){
+			msgbx('IE is currently not supported by DB Plumber', 'bad');
+		}
 
 	});
 
