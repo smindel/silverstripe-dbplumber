@@ -18,6 +18,10 @@ class DBP_Database extends ViewableData {
 		return get_class(DB::getConn());
 	}
 
+	function Transactions() {
+		return DB::getConn()->supportsTransactions();
+	}
+
 	function Tables() {
 
 		$tables = new DataObjectSet();
@@ -48,51 +52,12 @@ class DBP_Database_Controller extends DBP_Controller {
 	function execute($request) {
 
 		$vars = $this->getRequest()->requestVars();
-		if(empty($vars['query'])) return false;
-		$msg = '';
-		$error = false;
-		$query = $vars['query'];
-		$fields = new DataObjectSet();
-		$records = new DataObjectSet();
-		set_error_handler('exception_error_handler');
-		try {
-			$results = DB::getConn()->query($query, E_USER_NOTICE);
-		} catch(Exception $e) {
-			$msg = new ArrayData(array('text' => $e->getMessage(), 'type' => 'error'));
-		}
-		restore_error_handler();
 
-		if(isset($results) && $results) {
-			if(0) {
-				// @todo: add routine to determine the number of affected records on a write query
-				// no hook for the result ;(
-				// any ideas?
-				$msg = new ArrayData(array('text' => '4711 records affected', 'type' => 'highlight'));
-			} else {
-				foreach($results as $result) {
-					$record = new DBP_Record();
-					$data = array();
-					foreach($result as $field => $val) {
-						if(!$fields->find('Label', $field)) $fields->push(new DBP_Field($field));
-						$data[$field] = strlen($val) > 64 ? substr($val,0,63) . '<span class="truncated">&hellip;</span>' : $val;
-					}
-					$record->Data($data);
-					$records->push($record);
-				}
-			}
-		}
-
-		$records = new ArrayData(
-			array(
-				'Query' => $query,
-				'Fields' => $fields,
-				'Records' => $records,
-				'Message' => $msg,
-				'DBPLink' => $this->instance->DBPLink()
-			)                       
-		);
+		$result = DBP_Sql::execute_script($vars['query']);
 		
-		return $records->renderWith('DBP_Database_sql');
+		return $result ? $result->renderWith('DBP_Database_sql') : $this->instance->renderWith('DBP_Database_sql');
+		
+
 	}
 	
 	function export($request) {
@@ -124,8 +89,152 @@ class DBP_Database_Controller extends DBP_Controller {
 		header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '.sql"');
 		foreach($commands as $command) echo $command . "\r\n";
 	}
+	
+	function import($request) {
+		$file = $request->postVar('importfile');
+		if(!empty($file['tmp_name'])) {
+			if($request->postVar('importtype') == 'rawsql') {
+				foreach(DBP_Sql::split_script(file($file['tmp_name'])) as $q) {
+					$query = new DBP_Sql($q);
+					$query->execute();
+				}
+			}
+		}
+		foreach(self::$controller_stack as $c) if($c instanceof DatabaseBrowser) return $c;
+	}
+	
 }
 
 function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 	throw new Exception($errstr);
+}
+
+class DBP_Sql {
+	
+	public $query;
+	
+	function __construct($query = false) {
+		if($query) $this->query = $query;
+	}
+	
+	function type() {
+		return preg_match('/^(\w+)/', $this->query, $matches) ? strtoupper($matches[1]) : false;
+	}
+	
+	function execute() {
+		set_error_handler('exception_error_handler');
+		$results = $msg = false;
+		try {
+			$results = DB::getConn()->query($this->query, E_USER_NOTICE);
+		} catch(Exception $e) {
+			$msg = array('text' => $e->getMessage(), 'type' => 'error');
+		}
+		restore_error_handler();
+		
+		$fields = new DataObjectSet();
+		$records = new DataObjectSet();
+		if(isset($results) && $results instanceof SS_Query) {
+			if($results->numRecords() !== false) {
+				foreach($results as $result) {
+					$record = new DBP_Record();
+					$data = array();
+					foreach($result as $field => $val) {
+						if(!$fields->find('Label', $field)) $fields->push(new DBP_Field($field));
+						$data[$field] = strlen($val) > 64 ? substr($val,0,63) . '<span class="truncated">&hellip;</span>' : $val;
+					}
+					$record->Data($data);
+					$records->push($record);
+				}
+			} else {
+				// @todo: add routine to determine the number of affected records on a write query
+				// no hook for the result ;(
+				// any ideas?
+				$msg = array('text' => 'no error', 'type' => 'highlight');
+			}
+		}
+		
+		return array(
+			'Query' => $this->query,
+			'Fields' => $fields,
+			'Records' => $records,
+			'Message' => $msg,
+		);
+	}
+
+	static function execute_script($queries) {
+		$queries = DBP_Sql::split_script($queries);
+		switch(count($queries)) {
+			case 0: return false;
+			case 1:
+				$query = new DBP_Sql($queries[0]);
+				$records = new ArrayData($query->execute());
+				return $records;
+			default:
+				$status = 'highlight';
+				foreach($queries as $query) {
+					$query = new DBP_Sql($query);
+					$result = $query->execute();
+					$msg[] = $query->type() . ' ' . ($result['Message']['text'] ? $result['Message']['text'] : 'no error');
+					if($result['Message']['type'] == 'error') $status = 'error';
+				}
+				$result = new ArrayData(array(
+					'Query' => implode("\r\n", $queries),
+					'Message' => array(
+						'text' => implode("<br />\n", $msg),
+						'type' => $status
+					)
+				));
+				return $result;
+		}
+	}
+	
+	static function split_script($commands) {
+
+		// grouping characters
+		$bracketcharacters = array(
+			array('open' => '(', 'close' => ')', 'escape' => false),
+			array('open' => '"', 'close' => '"', 'escape' => false),
+			array('open' => "'", 'close' => "'", 'escape' => true),
+		);
+
+		// clean up a little first, make it one big string, trim it and make sure it ends with a ;
+		if(is_array($commands)) $commands = implode("\n", $commands);
+		$commands = trim($commands);
+		if(substr($commands, -1) != ';') $commands .= ';';
+
+		// looping over the script and finding ;'s OUTSIDE of brackets
+		$bcstack = array();
+		$output =  array();
+		while(strlen($commands) > 1) {
+			$continue = false;
+			for($i = 0; $i < strlen($commands); $i++) {
+				foreach($bracketcharacters as $id => $bc) {
+					// if we hit a closing character and it is matching the opening character currently open (on top of the bc stack)
+					if($commands[$i] == $bc['close'] && $bcstack[count($bcstack) - 1] === $id) {
+						array_pop($bcstack);
+						continue;
+					}
+					if($commands[$i] == $bc['open']) {
+						$bcstack[] = $id;
+						continue;
+					}
+				}
+				if($commands[$i] == ';' && count($bcstack) == 0) {
+					$o = trim(substr($commands, 0, $i));
+					if(strlen($o) > 1) $output[] = $o;
+					$commands = trim(substr($commands, $i + 1));
+					$continue = true;
+					break;
+				}
+			}
+			if(!$continue) {
+				$o = trim($commands);
+				if(strlen($o) > 1) $output[] = $o;
+				$commands = '';
+				break;
+			}
+		}
+		
+		return $output;
+	}
 }

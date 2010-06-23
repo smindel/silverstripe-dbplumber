@@ -21,6 +21,7 @@ class DatabaseBrowser extends LeftAndMain {
 		'form' => 'ADMIN',
 		'save' => 'ADMIN',
 		'export' => 'ADMIN',
+		'import' => 'ADMIN',
 	);
 
 	function init() {
@@ -62,6 +63,7 @@ class DatabaseBrowser extends LeftAndMain {
 	function form(SS_HTTP_Request $request) { return $this->delegate($request); }
 	function save(SS_HTTP_Request $request) { return $this->delegate($request); }
 	function export(SS_HTTP_Request $request) { return $this->delegate($request); }
+	function import(SS_HTTP_Request $request) { return $this->delegate($request); }
 	
 	protected function delegate(SS_HTTP_Request $request) {
 		if(array_search(strtolower($request->Param('Control')), self::$managed_models) === false) throw new Exception('Invalid Sub Controller "' . $request->Param('Control') . '"');

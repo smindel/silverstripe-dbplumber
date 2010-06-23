@@ -127,6 +127,11 @@ h1 span.small {
 	width:auto;
 }
 
+.importexportdiv {
+	width:50%;
+	float:left;
+}
+
 #ajax_msg {
 	margin-top: 5px;
 	padding: 0.25em 0.7em;
