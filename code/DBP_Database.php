@@ -53,7 +53,7 @@ class DBP_Database_Controller extends DBP_Controller {
 
 		$vars = $this->getRequest()->requestVars();
 
-		$result = DBP_Sql::execute_script($vars['query']);
+		$result = new ArrayData(DBP_Sql::execute_script($vars['query']));
 		
 		return $result ? $result->renderWith('DBP_Database_sql') : $this->instance->renderWith('DBP_Database_sql');
 		
@@ -149,7 +149,7 @@ class DBP_Sql {
 				// @todo: add routine to determine the number of affected records on a write query
 				// no hook for the result ;(
 				// any ideas?
-				$msg = array('text' => 'no error', 'type' => 'highlight');
+				// $msg = array('text' => 'X records affected', 'type' => 'highlight');
 			}
 		}
 		
@@ -167,23 +167,31 @@ class DBP_Sql {
 			case 0: return false;
 			case 1:
 				$query = new DBP_Sql($queries[0]);
-				$records = new ArrayData($query->execute());
+				$records = $query->execute();
 				return $records;
 			default:
 				$status = 'highlight';
+				if(DB::getConn()->supportsTransactions()) DB::getConn()->startTransaction();
 				foreach($queries as $query) {
 					$query = new DBP_Sql($query);
 					$result = $query->execute();
 					$msg[] = $query->type() . ' ' . ($result['Message']['text'] ? $result['Message']['text'] : 'no error');
-					if($result['Message']['type'] == 'error') $status = 'error';
+					if($result['Message']['type'] == 'error') {
+						$status = 'error';
+						break;
+					}
 				}
-				$result = new ArrayData(array(
-					'Query' => implode("\r\n", $queries),
+				if(DB::getConn()->supportsTransactions()) {
+					if($status == 'error') DB::getConn()->transactionRollback(); else DB::getConn()->endTransaction();
+					$msg[] = 'Transaction rolled back';
+				}
+				$result = array(
+					'Query' => implode(";\r\n", $queries),
 					'Message' => array(
 						'text' => implode("<br />\n", $msg),
 						'type' => $status
 					)
-				));
+				);
 				return $result;
 		}
 	}
