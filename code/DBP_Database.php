@@ -182,8 +182,12 @@ class DBP_Sql {
 					$msg[] = $query->type() . ' ' . ($result['Message']['text'] ? $result['Message']['text'] : 'no error');
 				}
 				if(DB::getConn()->supportsTransactions()) {
-					if($status == 'error') DB::getConn()->transactionRollback(); else DB::getConn()->endTransaction();
-					$msg[] = 'Transaction rolled back';
+					if($status == 'error') {
+						DB::getConn()->transactionRollback();
+						$msg[] = 'Transaction rolled back';
+					} else {
+						 DB::getConn()->endTransaction();
+					}
 				}
 				$result = array(
 					'Query' => implode(";\r\n", $queries),
@@ -218,7 +222,7 @@ class DBP_Sql {
 			for($i = 0; $i < strlen($commands); $i++) {
 				foreach($bracketcharacters as $id => $bc) {
 					// if we hit a closing character and it is matching the opening character currently open (on top of the bc stack)
-					if($commands[$i] == $bc['close'] && $bcstack[count($bcstack) - 1] === $id) {
+					if($commands[$i] == $bc['close'] && count($bcstack) && $bcstack[count($bcstack) - 1] === $id) {
 						array_pop($bcstack);
 						continue;
 					}
