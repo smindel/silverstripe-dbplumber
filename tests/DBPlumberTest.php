@@ -42,15 +42,21 @@ class DBPlumberTest extends FunctionalTest {
 		$this->assertEquals($command, $result['Query'], 'Return command correctly');
 		$this->assertEquals("DBP_Field", get_class($result['Fields']->First()), 'Result contains fields');
 		$this->assertEquals("DBP_Record", get_class($result['Records']->First()), 'Result contains records');
-		$this->assertFalse($result['Message'], 'No errors => no message');
+		$this->assertNotEquals('error', $result['Message']['type'], 'No errors message');
 		
 		// query without output
 		$command = "UPDATE \"SiteTree\" SET \"URLSegment\" = 'someurl' WHERE \"ID\" > 5000;";
 		$query = new DBP_Sql($command);
 		$result = $query->execute();
 		$this->assertEquals($command, $result['Query'], 'Return command correctly');
-		$this->assertFalse($result['Message'], 'No errors => no message');
+		$this->assertNotEquals('error', $result['Message']['type'], 'No errors message');
 		
+		// query with escaped songle quoute
+		$command = "INSERT INTO \"SiteTree\" (\"ID\", \"ClassName\", \"URLSegment\", \"Title\", \"Content\") VALUES ('60', 'ErrorPage', 'page-not-found', 'Page not found', '<p>Sorry, it seems you were trying to access a page that doesn\\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');";
+		$query = new DBP_Sql($command);
+		$result = $query->execute();
+		$this->assertNotEquals('error', $result['Message']['type'], 'Escaping quotes works');
+
 		// force an error
 		$command = "force error";
 		$query = new DBP_Sql($command);
@@ -70,13 +76,13 @@ class DBPlumberTest extends FunctionalTest {
 		$this->assertEquals($script, $result['Query'], 'Return SELECT command correctly');
 		$this->assertEquals("DBP_Field", get_class($result['Fields']->First()), 'Result contains fields');
 		$this->assertEquals("DBP_Record", get_class($result['Records']->First()), 'Result contains records');
-		$this->assertFalse($result['Message'], 'No errors => no message');
+		$this->assertNotEquals('error', $result['Message']['type'], 'No errors message');
 
 		// only one command, without output
 		$script = "INSERT INTO \"ErrorPage\" (\"ID\", \"ErrorCode\") VALUES ('99', '999')";
 		$result = DBP_Sql::execute_script($script);
 		$this->assertEquals($script, $result['Query'], 'Return UPDATE command correctly');
-		$this->assertFalse($result['Message'], 'No errors => no message');
+		$this->assertNotEquals('error', $result['Message']['type'], 'No errors message');
 		$this->assertEquals(999, DB::query("SELECT \"ErrorCode\" FROM \"ErrorPage\" WHERE \"ID\" = '99'")->Value(), 'Make sure the query really gets executed');
 		
 		// only one command, forcing an error

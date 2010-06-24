@@ -48,7 +48,7 @@
 					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only export" aria-disabled="false"><a href='#'>export</a></button>
 				</form>
 			</div>
-			<div id='exportformdiv' class='importexportdiv'>
+			<div id='importformdiv' class='importexportdiv'>
 				<form action='admin/dbplumber/database/import' method="post" enctype="multipart/form-data">
 					<input type="hidden" name="MAX_FILE_SIZE" value="16777216" />
 					<div>

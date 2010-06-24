@@ -27,6 +27,7 @@ class DatabaseBrowser extends LeftAndMain {
 	function init() {
 		parent::init();
 
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-form/jquery.form.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.widget.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.tabs.js');

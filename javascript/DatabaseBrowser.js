@@ -30,6 +30,19 @@ function msgbx(text,status) {
 
 		$("#tabs").tabs();
 		$("#right table.kike").kiketable_colsizable(kikeoptions);
+		
+		$('#importformdiv form').ajaxForm({
+			target: '#sql-tab',
+			success: function() { 
+				$("#tabs").tabs('select', 1);
+				msgbx('executed', 'good');
+			},
+			beforeSubmit: function() { 
+				msgbx('uploading...', 'waiting');
+			}
+			
+		});
+		
 		setSizes();
 	}
 

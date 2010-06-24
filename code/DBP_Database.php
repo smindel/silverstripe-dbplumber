@@ -56,7 +56,6 @@ class DBP_Database_Controller extends DBP_Controller {
 		$result = new ArrayData(DBP_Sql::execute_script($vars['query']));
 		
 		return $result ? $result->renderWith('DBP_Database_sql') : $this->instance->renderWith('DBP_Database_sql');
-		
 
 	}
 	
@@ -76,7 +75,8 @@ class DBP_Database_Controller extends DBP_Controller {
 			foreach(DB::fieldList($table) as $name => $spec) $fields[] = $name;
 			foreach(DB::query('SELECT * FROM "' . $table . '"') as $record) {
 				$cells = array();
-				foreach($record as $cell) $cells[] = str_replace("'", "\\'", $cell);
+			
+				foreach($record as $cell) $cells[] = str_replace("'", DB::getConn()->addslashes("'"), $cell);
 				$commands[] = 
 					"INSERT INTO \"$table\" (\"" . 
 					implode('", "', $fields) . 
@@ -86,21 +86,20 @@ class DBP_Database_Controller extends DBP_Controller {
 			}
 		}
 		header("Content-type: text/sql; charset=utf-8");
-		header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '.sql"');
+		header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '_' . $this->instance->Type() .  '.sql"');
 		foreach($commands as $command) echo $command . "\r\n";
 	}
 	
 	function import($request) {
+		$result = false;
 		$file = $request->postVar('importfile');
 		if(!empty($file['tmp_name'])) {
 			if($request->postVar('importtype') == 'rawsql') {
-				foreach(DBP_Sql::split_script(file($file['tmp_name'])) as $q) {
-					$query = new DBP_Sql($q);
-					$query->execute();
-				}
+				$result = new ArrayData(DBP_Sql::execute_script(file($file['tmp_name'])));
 			}
 		}
-		foreach(self::$controller_stack as $c) if($c instanceof DatabaseBrowser) return $c;
+
+		return $result ? $result->renderWith('DBP_Database_sql') : $this->instance->renderWith('DBP_Database_sql');
 	}
 	
 }
@@ -123,33 +122,27 @@ class DBP_Sql {
 	
 	function execute() {
 		set_error_handler('exception_error_handler');
-		$results = $msg = false;
+		$results = false;
+		$msg = array('text' => 'no errors', 'type' => 'good');
 		try {
 			$results = DB::getConn()->query($this->query, E_USER_NOTICE);
 		} catch(Exception $e) {
 			$msg = array('text' => $e->getMessage(), 'type' => 'error');
 		}
 		restore_error_handler();
-		
+
 		$fields = new DataObjectSet();
 		$records = new DataObjectSet();
 		if(isset($results) && $results instanceof SS_Query) {
-			if($results->numRecords() !== false) {
-				foreach($results as $result) {
-					$record = new DBP_Record();
-					$data = array();
-					foreach($result as $field => $val) {
-						if(!$fields->find('Label', $field)) $fields->push(new DBP_Field($field));
-						$data[$field] = strlen($val) > 64 ? substr($val,0,63) . '<span class="truncated">&hellip;</span>' : $val;
-					}
-					$record->Data($data);
-					$records->push($record);
+			foreach($results as $result) {
+				$record = new DBP_Record();
+				$data = array();
+				foreach($result as $field => $val) {
+					if(!$fields->find('Label', $field)) $fields->push(new DBP_Field($field));
+					$data[$field] = strlen($val) > 64 ? substr($val,0,63) . '<span class="truncated">&hellip;</span>' : $val;
 				}
-			} else {
-				// @todo: add routine to determine the number of affected records on a write query
-				// no hook for the result ;(
-				// any ideas?
-				// $msg = array('text' => 'X records affected', 'type' => 'highlight');
+				$record->Data($data);
+				$records->push($record);
 			}
 		}
 		
@@ -164,7 +157,7 @@ class DBP_Sql {
 	static function execute_script($queries) {
 		$queries = DBP_Sql::split_script($queries);
 		switch(count($queries)) {
-			case 0: return false;
+			case 0: return array();
 			case 1:
 				$query = new DBP_Sql($queries[0]);
 				$records = $query->execute();
@@ -175,11 +168,12 @@ class DBP_Sql {
 				foreach($queries as $query) {
 					$query = new DBP_Sql($query);
 					$result = $query->execute();
-					$msg[] = $query->type() . ' ' . ($result['Message']['text'] ? $result['Message']['text'] : 'no error');
 					if($result['Message']['type'] == 'error') {
+						$msg[] = $result['Query'] . '<br />' . $result['Message']['text'];
 						$status = 'error';
 						break;
 					}
+					$msg[] = $query->type() . ' ' . ($result['Message']['text'] ? $result['Message']['text'] : 'no error');
 				}
 				if(DB::getConn()->supportsTransactions()) {
 					if($status == 'error') DB::getConn()->transactionRollback(); else DB::getConn()->endTransaction();
