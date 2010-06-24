@@ -69,6 +69,7 @@ class DBP_Database_Controller extends DBP_Controller {
 	
 	function backup($tables) {
 		$commands = array();
+		if(DB::getConn() instanceof MSSQLDatabase) $commands[] = 'SET IDENTITY_INSERT ON;';
 		foreach($tables as $table) {
 			$fields = array();
 			$commands[] = 'DELETE FROM "' . $table . '";';
@@ -76,15 +77,20 @@ class DBP_Database_Controller extends DBP_Controller {
 			foreach(DB::query('SELECT * FROM "' . $table . '"') as $record) {
 				$cells = array();
 			
-				foreach($record as $cell) $cells[] = str_replace("'", DB::getConn()->addslashes("'"), $cell);
+				foreach($record as $cell) {
+					if(is_null($cell)) $cell = 'NULL';
+					else if(is_string($cell)) $cell = "'" . str_replace("'", "''", $cell) . "'";
+					$cells[] = $cell;
+				}
 				$commands[] = 
 					"INSERT INTO \"$table\" (\"" . 
 					implode('", "', $fields) . 
-					"\") VALUES ('" . 
-					implode("', '", $cells) . 
-					"');";
+					"\") VALUES (" . 
+					implode(", ", $cells) . 
+					");";
 			}
 		}
+		if(DB::getConn() instanceof MSSQLDatabase) $commands[] = 'SET IDENTITY_INSERT OFF;';
 		header("Content-type: text/sql; charset=utf-8");
 		header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '_' . $this->instance->Type() .  '.sql"');
 		foreach($commands as $command) echo $command . "\r\n";
@@ -127,7 +133,7 @@ class DBP_Sql {
 		try {
 			$results = DB::getConn()->query($this->query, E_USER_NOTICE);
 		} catch(Exception $e) {
-			$msg = array('text' => $e->getMessage(), 'type' => 'error');
+			$msg = array('text' => htmlentities($e->getMessage()), 'type' => 'error');
 		}
 		restore_error_handler();
 
