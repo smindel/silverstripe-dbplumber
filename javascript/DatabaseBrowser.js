@@ -89,6 +89,8 @@ function msgbx(text,status) {
 			return false;
 		});
 
+		$("textarea[class*=expand]").livequery(function(){$(this).TextAreaExpander()});
+
 		// paginate through the records of a table
 		$('#browse-tab .pagination').live('click',function(){
 			msgbx('loading...', 'waiting');
