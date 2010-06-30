@@ -86,6 +86,11 @@ h1 span.small {
 	width:16px;
 	height:16px;
 	background:url(../../sapphire/thirdparty/jquery-ui-themes/base/images/ui-icons_222222_256x240.png) no-repeat 0px 0px;
+	text-indent:-9999px;
+}
+
+#right p.table-tools button {
+	margin-left:10px;
 }
 
 #right button.first-page a { background-position:-240px -32px; }

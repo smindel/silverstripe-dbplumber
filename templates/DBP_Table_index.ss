@@ -1,21 +1,21 @@
 			<% if Records %>
 				<% if Pagination.total %>
-					<p>
+					<p class='table-tools'>
 						Showing records $Pagination.start - $Pagination.end ($Pagination.total total)
 
 						<% if Records.MoreThanOnePage %>
 							<% if Records.PrevLink %>
-								<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination first-page" aria-disabled="false"><a href='{$DBPLink}table/index/$Name?{$Pagination.firstlink}&orderby={$Pagination.orderby}&orderdir={$Pagination.orderdir}'>&nbsp;</a></button>
-								<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination prev-page"  aria-disabled="false"><a href='{$DBPLink}table/index/$Name?{$Pagination.prevlink}&orderby={$Pagination.orderby}&orderdir={$Pagination.orderdir}'>&nbsp;</a></button>
+								<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination first-page" aria-disabled="false"><a href='{$DBPLink}table/index/$Name?{$Pagination.firstlink}&orderby={$Pagination.orderby}&orderdir={$Pagination.orderdir}'>first</a></button>
+								<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination prev-page"  aria-disabled="false"><a href='{$DBPLink}table/index/$Name?{$Pagination.prevlink}&orderby={$Pagination.orderby}&orderdir={$Pagination.orderdir}'>prev</a></button>
 							<% end_if %>
 
 							<% if Records.NextLink %>
-								<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination next-page" aria-disabled="false"><a href='{$DBPLink}table/index/$Name?{$Pagination.nextlink}&orderby={$Pagination.orderby}&orderdir={$Pagination.orderdir}'>&nbsp;</a></button>
-								<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination last-page" aria-disabled="false"><a href='{$DBPLink}table/index/$Name?{$Pagination.lastlink}&orderby={$Pagination.orderby}&orderdir={$Pagination.orderdir}'>&nbsp;</a></button>
+								<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination next-page" aria-disabled="false"><a href='{$DBPLink}table/index/$Name?{$Pagination.nextlink}&orderby={$Pagination.orderby}&orderdir={$Pagination.orderdir}'>next</a></button>
+								<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only pagination last-page" aria-disabled="false"><a href='{$DBPLink}table/index/$Name?{$Pagination.lastlink}&orderby={$Pagination.orderby}&orderdir={$Pagination.orderdir}'>last</a></button>
 							<% end_if %>
 						<% end_if %>
 
-						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only crud-records delete-records" disabled="disabled"><a href='{$DBPLink}record/delete'>&nbsp;</a></button>
+						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only crud-records delete-records" disabled="disabled"><a href='{$DBPLink}record/delete'>delete</a></button>
 					</p>
 				<% end_if %>
 				<form>
