@@ -52,7 +52,7 @@ class DBPlumberTest extends FunctionalTest {
 		$this->assertNotEquals('error', $result['Message']['type'], 'No errors message');
 		
 		// query with escaped songle quoute
-		$command = "INSERT INTO \"SiteTree\" (\"ID\", \"ClassName\", \"URLSegment\", \"Title\", \"Content\") VALUES ('60', 'ErrorPage', 'page-not-found', 'Page not found', '<p>Sorry, it seems you were trying to access a page that doesn\\'t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');";
+		$command = "INSERT INTO \"SiteTree\" (\"ID\", \"ClassName\", \"URLSegment\", \"Title\", \"Content\") VALUES ('60', 'ErrorPage', 'page-not-found', 'Page not found', '<p>Sorry, it seems you were trying to access a page that doesn''t exist.</p><p>Please check the spelling of the URL you were trying to access and try again.</p>');";
 		$query = new DBP_Sql($command);
 		$result = $query->execute();
 		$this->assertNotEquals('error', $result['Message']['type'], 'Escaping quotes works');
