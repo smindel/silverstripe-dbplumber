@@ -1,5 +1,5 @@
 				<form id='sql_form' method='post' action='admin/dbplumber/database/execute' onsubmit='return false;'>
-					<textarea name='query'>$Query</textarea><br />
+					<textarea name='query' class='expand50-250'>$Query</textarea><br />
 					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false" type="submit"><span class="ui-button-text">go</span></button>
 				</form>
 				<% if Query %>

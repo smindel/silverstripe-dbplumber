@@ -45,7 +45,7 @@ function msgbx(text,status) {
 		
 		setSizes();
 	}
-
+	
 	// set the proper sizes for tabs and table list
 	function setSizes() {
 		$('#dbb_table_list').height($('#left').innerHeight() - $('#lefthead').height());
@@ -88,7 +88,7 @@ function msgbx(text,status) {
 			});
 			return false;
 		});
-		
+
 		// paginate through the records of a table
 		$('#browse-tab .pagination').live('click',function(){
 			msgbx('loading...', 'waiting');

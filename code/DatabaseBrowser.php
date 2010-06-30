@@ -37,6 +37,7 @@ class DatabaseBrowser extends LeftAndMain {
 		Requirements::javascript("dbplumber/javascript/DatabaseBrowser.js");
 		Requirements::javascript("dbplumber/thirdparty/jquery.event.drag-1.4.js");
 		Requirements::javascript("dbplumber/thirdparty/jquery.kiketable.colsizable-1.1.js");
+		Requirements::javascript("dbplumber/thirdparty/jquery.textarea-expander.js");
 		Requirements::css("dbplumber/thirdparty/jquery.kiketable.colsizable-1.1.css");
 		Requirements::css("dbplumber/css/DatabaseBrowser_left.css");
 		Requirements::css("dbplumber/css/DatabaseBrowser_right.css");
