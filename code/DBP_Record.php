@@ -44,11 +44,15 @@ class DBP_Record extends ViewableData {
 	function save() {
 		$sets = $keys = $vals = array();
 		if($this->id) {
-			foreach($this->data as $key => $val) $sets[$key] = "\"$key\" = '$val'";
+			foreach($this->data as $key => $val) {
+				$val = str_replace("'", "''", $val);
+				$sets[$key] = "\"$key\" = '$val'";
+			}
 			$query = 'UPDATE "' . $this->table . '" SET ' . implode(', ', $sets) . ' WHERE "ID" = \'' . $this->id . '\'';
 		} else {
 			foreach($this->data as $key => $val) {
 				if($key == 'ID' && empty($val)) continue;
+				$val = str_replace("'", "''", $val);
 				$keys[] = "\"$key\"";
 				$vals[] = "'$val'";
 			}
