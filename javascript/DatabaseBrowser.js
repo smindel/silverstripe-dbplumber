@@ -5,13 +5,13 @@ function msgbx(text,status) {
 	var $ = jQuery;
 	$('#ajax_msg').text(text);
 	if(status == 'off') {
-		$('#ajax_msg').hide('slow');
+		$('#ajax_msg').fadeOut('slow');
 	} else {
 		$('#ajax_msg').removeClass('good');
 		$('#ajax_msg').removeClass('bad');
 		$('#ajax_msg').removeClass('waiting');
  		$('#ajax_msg').addClass(status);
- 		$('#ajax_msg').show('fast');
+ 		$('#ajax_msg').fadeIn('fast');
  	}
 	if(status == 'good' || status == 'bad')
 		timeout = setTimeout('msgbx("' + text + '", "off")', 3000);
@@ -156,10 +156,10 @@ function msgbx(text,status) {
 				url,
 				$(this).serialize(),
 				function(data){
-					msgbx('saved', 'good');
+					msgbx('saved, reloading...', 'waiting');
 					var redirect = 'admin/dbplumber/table/show/' + $('#table').val() + '?start=' + $('#start').val() + '&orderby=' + $('#orderby').val() + '&orderdir=' + $('#orderdir').val() + '&record=' + data.id + '#form-tab'
 					$('#right div.main').load(redirect , function(){
-						msgbx('loaded', 'good');
+						msgbx('reloaded', 'good');
 						initRight();
 						$("#tabs").tabs('select', 2);
 					});
