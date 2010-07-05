@@ -45,7 +45,7 @@
 						<label for="exporttype">Export type</label>
 						<div class="input"><input id='exporttype' name='exporttype' value='backup' type="radio" checked="checked"> Backup (SQL DELETEs and INSERTs)</div>
 					</div>
-					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only export" aria-disabled="false"><a href='#'>export</a></button>
+					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only export" aria-disabled="false" type="submit"><a href='#'>export</a></button>
 				</form>
 			</div>
 			<div id='importformdiv' class='importexportdiv'>
@@ -59,7 +59,7 @@
 						<label for="exporttype">Import type</label>
 						<div class="input"><input id='importtype' name='importtype' value='rawsql' type="radio" checked="checked"> SQL commands</div>
 					</div>
-					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only import" aria-disabled="false"><a href='#'>import</a></button>
+					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only import" aria-disabled="false" type="submit"><a href='#'>import</a></button>
 				</form>
 			</div>
 		</div>

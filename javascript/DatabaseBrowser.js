@@ -80,15 +80,21 @@ function msgbx(text,status) {
 		});
 
 		// submit a custom query on the right
-		$('#sql_form').live('submit', function() {
+		$('#sql_form button').livequery('click', function() {
 			msgbx('execute statement', 'waiting');
-			$('#sql-tab').load($(this).attr('action'), $(this).serialize(),function(){
-				$("#right table.kike").kiketable_colsizable(kikeoptions);
-				msgbx('executed', 'good');
-			});
+			$.post(
+				'admin/dbplumber/database/execute',
+				$('#sql_form').serialize(),
+				function(data){
+					$('#sql-tab').html(data);
+					$("#right table.kike").kiketable_colsizable(kikeoptions);
+				 	msgbx('executed', 'good');
+				}
+			);
 			return false;
 		});
 
+		// autoexpand sql query field
 		$("textarea[class*=expand]").livequery(function(){$(this).TextAreaExpander()});
 
 		// paginate through the records of a table
@@ -149,17 +155,17 @@ function msgbx(text,status) {
 		});
 
 		// save a record 
-		$('#recordform').live('submit',function(){
+		$('button.saverecord').live('click',function(){
 			msgbx('saving...', 'waiting');
 			var recid = $('#oldid').val();
-			var url = $('.saverecord a').attr('rel');
-			var redirect = $(this).attr('action');
+			var url = $('#recordform').attr('action');
 			$.post(
 				url,
-				$(this).serialize(),
+				$('#recordform').serialize(),
 				function(data){
 					msgbx('saved, reloading...', 'waiting');
-					var redirect = 'admin/dbplumber/table/show/' + $('#table').val() + '?start=' + $('#start').val() + '&orderby=' + $('#orderby').val() + '&orderdir=' + $('#orderdir').val() + '&record=' + data.id + '#form-tab'
+					var redirect = 'admin/dbplumber/table/show/' + $('#table').val() + '?start=' + $('#start').val() + '&orderby=' + $('#orderby').val() + '&orderdir=' + $('#orderdir').val() + '&record=' + data.id;
+					alert(redirect);
 					$('#right div.main').load(redirect , function(){
 						msgbx('reloaded', 'good');
 						initRight();
