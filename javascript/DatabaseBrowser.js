@@ -165,7 +165,6 @@ function msgbx(text,status) {
 				function(data){
 					msgbx('saved, reloading...', 'waiting');
 					var redirect = 'admin/dbplumber/table/show/' + $('#table').val() + '?start=' + $('#start').val() + '&orderby=' + $('#orderby').val() + '&orderdir=' + $('#orderdir').val() + '&record=' + data.id;
-					alert(redirect);
 					$('#right div.main').load(redirect , function(){
 						msgbx('reloaded', 'good');
 						initRight();
