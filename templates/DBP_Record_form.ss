@@ -5,14 +5,14 @@
 			<div id="div_$Column.Label">
 				<label for="update_$Column.Label">$Column.Label</label>
 				<% if Column.isText %>
-					<div class="input"><textarea class='$Column.type' name="update_$Column.Label" rows="3" cols="40" id="update_$Column.Label">$Value.raw</textarea></div>
+					<div class="input"><textarea class='$Column.type' name="update_$Column.Label" rows="3" cols="40" id="update_$Column.Label">$Value.escaped</textarea></div>
 				<% else_if Column.isBool %>
 					<div class="input">
 						<input class='$Column.type' name="update_$Column.Label" value="0" id="update_{$Column.Label}_0" type="radio"<% control Value %><% if raw != 1 %> checked="checked"<% end_if %><% end_control %> /> false
 						<input class='$Column.type' name="update_$Column.Label" value="1" id="update_{$Column.Label}_1" type="radio"<% control Value %><% if raw %> checked="checked"<% end_if %><% end_control %> /> true
 					</div>
 				<% else %>
-					<div class="input"><input class='$Column.type' name="update_$Column.Label" value="$Value.raw" id="update_$Column.Label" type="text" /></div>
+					<div class="input"><input class='$Column.type' name="update_$Column.Label" value="$Value.escaped" id="update_$Column.Label" type="text" /></div>
 				<% end_if %>
 			</div>
 		<% end_control %>
