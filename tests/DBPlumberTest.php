@@ -17,7 +17,7 @@ class DBPlumberTest extends FunctionalTest {
 		$script = " \n SELECT * FROM \"SiteTree\"\r\n ; ";
 		$commands = DBP_Sql::split_script($script);
 		$this->assertEquals(1, count($commands), 'Return only one command');
-		$this->assertEquals("SELECT * FROM \"SiteTree\";", $commands[0], 'Return correct command');
+		$this->assertEquals(trim($script), $commands[0], 'Return correct command');
 		
 		$script = "SELECT * FROM \"SiteTree\"\r\n WHERE \"ID\" > 15;\nUPDATE \"File\" SET \"Name\" = 'somename' WHERE \"ID\" = 79; insert into ErrorPage (ID) values ('79')";
 		$commands = DBP_Sql::split_script($script);

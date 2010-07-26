@@ -76,7 +76,7 @@ class DBP_Sql {
 					}
 				}
 				$result = array(
-					'Query' => implode(";\r\n", $queries),
+					'Query' => implode("\r\n", $queries),
 					'Message' => array(
 						'text' => implode("<br />\n", $msg),
 						'type' => $status
@@ -86,117 +86,93 @@ class DBP_Sql {
 		}
 	}
 	
-	static function split_script($commands) {
-
+	static function split_script($commands, $doindent = false) {
+		
+		if($c = Controller::curr()) if($r = $c->getRequest()) if($r->requestVar('indent')) $doindent = true;
+		
 		// clean up a little first, make it one big string, trim it and make sure it ends with a ;
 		if(is_array($commands)) $commands = implode("\n", $commands);
 		$commands = trim($commands);
 		if(substr($commands, -1) != ';') $commands .= ';';
-		
+
 		// looping over the script character by character
-		$last = '';
 		$scope = 'root';
 		$indent = 0;
 		$index = 0;
 		$output = array();
 		for($i = 0; $i < strlen($commands); $i++) {
-			
+
 			$char = $commands[$i];
-			
+
+			if(!isset($output[$index])) $output[$index] = '';
+
+			// when we are not in an identifier or a literal all whitespaces are converted to spaces
+			if($doindent && $scope != 'identifier' && $scope != 'literal' && trim($char) == '') $char = ' ';
+
+			// when we are not in an identifier or a literal remove unneccessary spaces and semicolons
+			if(
+				$doindent &&
+				$scope != 'identifier' &&
+				$scope != 'literal' &&
+				(
+					(
+						trim(substr($output[$index],-1)) == '' && 
+						$char == ' '
+					) || (
+						trim(substr($output[$index],-1)) == ';' &&
+						$char == ';'
+					) || (
+						$char == ' ' &&
+						(trim($commands[$i + 1]) == '' || $commands[$i + 1] == ';')
+					)
+				)
+			) continue;
+
+			// remove unneccessary spaces and semicolons from the beginning of the command
+			if($doindent && $scope == 'root' && trim($output[$index]) == '' && $char == ';') continue;
+
 			// determin if we are in an identifier or a literal
 			if($scope == 'root') {
 				if($char == '"') $scope = 'identifier';
 				if($char == "'") $scope = 'literal';
+				if($char == "(") $scope = 'bracket';
 			} else if($scope == 'identifier' && $char == '"') {
 				$scope = 'root';
-			} else if($scope == 'literal' && $char == "'" && $last != "\\") {
+			} else if($scope == 'literal' && $char == "'" && substr($output[$index],-1) != "\\") {
+				$scope = 'root';
+			} else if($scope == 'bracket' && $char == ")") {
 				$scope = 'root';
 			}
-			
-			// when we are not in an identifier or a literal all whitespaces are converted to spaces
-			if($scope == 'root' && preg_match('/^\s$/', $char)) $char = ' ';
-			
-			// when we are not in an identifier or a literal remove unneccessary spaces
-			if($scope == 'root' && $last == ' ' && ($char == ';' || $char == ' ')) {
-				$output[$index] = substr($output[$index], 0, strlen($output[$index]) - 1);
-				$last = substr($output[$index], -1);
-			}
-			
+
 			// add the current character to the current command
 			if(!empty($output[$index]) || $char != ' ') {
-				if($char == ' ' && preg_match('/\bSELECT$|\bFROM$|\bWHERE$|\bGROUP BY$|\bHAVING$|\bJOIN$|\bUNION$|\bINTERSECT$|\bEXCEPT$|\bUPDATE$|\bSET$|\bINSERT INTO$|\bVALUES$/i', $output[$index])) {
-					$output[$index] .= "\n";
-					$indent++;
-				} else if($char == ' ' && $last != '' && preg_match('/^SELECT\b|^FROM\b|^WHERE\b|^GROUP BY\b|^HAVING\b|^LEFT\b|^RIGHT\b|^INNER\b|^UNION\b|^INTERSECT\b|^EXCEPT\b|^UPDATE\b|^SET\b|^INSERT INTO\b|^VALUES\b/i', substr($commands,$i))) {
-					$output[$index] .= "\n";
-					$indent--;
+				if($doindent && $char == ' ' && preg_match('/\bSELECT$|\bFROM$|\bWHERE$|\bGROUP BY$|\bHAVING$|\bJOIN$|\bUNION$|\bINTERSECT$|\bEXCEPT$|\bUPDATE$|\bSET$|\bINSERT INTO$|\bVALUES$|\bORDER BY$|\bLIMIT$/i', $output[$index])) {
+					$output[$index] .= "\n" . str_repeat("\t", ++$indent);
+				} else if($doindent && $char == ' ' && !empty($output[$index]) && preg_match('/^\s+FROM\b|^\s+WHERE\b|^\s+GROUP BY\b|^\s+HAVING\b|^\s+LEFT\b|^\s+RIGHT\b|^\s+INNER\b|^\s+UNION\b|^\s+INTERSECT\b|^\s+EXCEPT\b|^\s+UPDATE\b|^\s+SET\b|^\s+INSERT INTO\b|^\s+VALUES\b|^\s+ORDER BY\b|^\s+LIMIT\b/i', substr($commands,$i))) {
+					$output[$index] .= "\n" . str_repeat("\t", --$indent);
+				} else if($doindent && $char == ' ' && $scope == 'root' && preg_match('/,$|\bAND$|\bOR$/i', $output[$index])) {
+					$output[$index] .= "\n" . str_repeat("\t", $indent);
 				} else {
 					$output[$index] .= $char;
 				}
 			}
-			
+
 			// end current command if we hit a semicolon
-			if($scope == 'root' && $char == ';' && $last != ';') {
-				$last = '';
+			if($scope == 'root' && $char == ';') {
 				$index++;
 				$indent = 0;
 			}
+		}
+
+		$commands = array();
+		foreach($output as $command) {
+			$command = trim($command);
+			if(empty($command) || $command == ';') continue;
+			$commands[] = $command;
+		}
+		return $commands;
+	}
 			
-			$last = $char;
-		}
-		
-		return $output;
-	}
-	
-	static function old_split_script($commands) {
-
-		// grouping characters
-		$bracketcharacters = array(
-			array('open' => '(', 'close' => ')', 'escape' => false),
-			array('open' => '"', 'close' => '"', 'escape' => false),
-			array('open' => "'", 'close' => "'", 'escape' => true),
-		);
-
-		// clean up a little first, make it one big string, trim it and make sure it ends with a ;
-		if(is_array($commands)) $commands = implode("\n", $commands);
-		$commands = trim($commands);
-		if(substr($commands, -1) != ';') $commands .= ';';
-
-		// looping over the script and finding ;'s OUTSIDE of brackets
-		$bcstack = array();
-		$output =  array();
-		while(strlen($commands) > 1) {
-			$continue = false;
-			for($i = 0; $i < strlen($commands); $i++) {
-				foreach($bracketcharacters as $id => $bc) {
-					// if we hit a closing character and it is matching the opening character currently open (on top of the bc stack)
-					if($commands[$i] == $bc['close'] && count($bcstack) && $bcstack[count($bcstack) - 1] === $id) {
-						array_pop($bcstack);
-						continue;
-					}
-					if($commands[$i] == $bc['open']) {
-						$bcstack[] = $id;
-						continue;
-					}
-				}
-				if($commands[$i] == ';' && count($bcstack) == 0) {
-					$o = trim(substr($commands, 0, $i));
-					if(strlen($o) > 1) $output[] = $o;
-					$commands = trim(substr($commands, $i + 1));
-					$continue = true;
-					break;
-				}
-			}
-			if(!$continue) {
-				$o = trim($commands);
-				if(strlen($o) > 1) $output[] = $o;
-				$commands = '';
-				break;
-			}
-		}
-		
-		return $output;
-	}
 }
 
 function exception_error_handler($errno, $errstr, $errfile, $errline ) {

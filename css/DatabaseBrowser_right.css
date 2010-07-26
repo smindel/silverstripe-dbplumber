@@ -136,6 +136,10 @@ h1 span.small {
 	width:auto;
 }
 
+#indent {
+	margin-left:20px;
+}
+
 .importexportdiv {
 	width:50%;
 	float:left;
