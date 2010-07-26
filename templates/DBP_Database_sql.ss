@@ -1,6 +1,7 @@
 				<form id='sql_form' method='post' action='admin/dbplumber/database/execute' return='return false'>
 					<textarea name='query' class='expand50-250'>$Query</textarea><br />
-					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" aria-disabled="false" type="submit"><a href='admin/dbplumber/database/execute' class="ui-button-text">go</a></button><input type="checkbox" name="indent" id="indent"> indent
+					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" aria-disabled="false" type="submit"><a href='admin/dbplumber/database/execute' class="ui-button-text">go</a></button>
+					<input type="checkbox" name="indent" id="indent"> indent SQL commands for improved readability
 				</form>
 				<% if Query %>
 					<% if Records %>

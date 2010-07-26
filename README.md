@@ -29,7 +29,7 @@ It is not as powerful as phpMyAdmin but it is very lightweight and works with al
 ## Features
 
  * All features are accessible through a new CMS section called DBPlumber. Access is restricted to admins.
- * Use SQL tab to enter any sql query and send it to your database. SELECT results are displayed in a clear table.
+ * Use SQL tab to enter any sql query and send it to your database. SELECT results are displayed in a clear table. Use indentation to clean up your SQL commands.
  * The UI lists all tables in the database, you can browse records by table, the records are paginated and sortable.
  * Click on records to select them for deletion or double click to edit them.
  * Use the form tab to insert a new record to a table.
