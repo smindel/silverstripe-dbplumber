@@ -33,17 +33,19 @@ It is not as powerful as phpMyAdmin but it is very lightweight and works with al
  * The UI lists all tables in the database, you can browse records by table, the records are paginated and sortable.
  * Click on records to select them for deletion or double click to edit them.
  * Use the form tab to insert a new record to a table.
+ * Export tables
+ * Bulk execute SQL files/backups
 
 ## Open Issues
 
- * Misbehaving js in IE
- * DB null is not yet treated properly when you insert/update a record through the form and in the exporter
+ * Misbehaving js/css in IE
+ * insert/update form does not account for NULL, needs testing for quotes
 
 ## Planned Features
 
- * import/export tables/db
- * backup/restore
+ * syntax highlighter / checker
+ * saving of custom queries
 
 ## Feedback
 
-This module is in alpha state. Please help me to improve it by submitting your feedback/bug reports/support requests/suggestions. Thanks
+This module is in beta state. Please help me to improve it by submitting your feedback/bug reports/support requests/suggestions. Thanks
