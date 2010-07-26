@@ -17,12 +17,12 @@ class DBPlumberTest extends FunctionalTest {
 		$script = " \n SELECT * FROM \"SiteTree\"\r\n ; ";
 		$commands = DBP_Sql::split_script($script);
 		$this->assertEquals(1, count($commands), 'Return only one command');
-		$this->assertEquals("SELECT * FROM \"SiteTree\"", $commands[0], 'Return correct command');
+		$this->assertEquals("SELECT * FROM \"SiteTree\";", $commands[0], 'Return correct command');
 		
 		$script = "SELECT * FROM \"SiteTree\"\r\n WHERE \"ID\" > 15;\nUPDATE \"File\" SET \"Name\" = 'somename' WHERE \"ID\" = 79; insert into ErrorPage (ID) values ('79')";
 		$commands = DBP_Sql::split_script($script);
 		$this->assertEquals(3, count($commands), 'Return all 3 commands');
-		$this->assertEquals("insert into ErrorPage (ID) values ('79')", $commands[2], 'Split commands corrctly');
+		$this->assertEquals("insert into ErrorPage (ID) values ('79');", $commands[2], 'Split commands corrctly');
 		
 		$script = "SELECT * FROM \"SiteTree\"\r\n WHERE \"Content\" LIKE '%;%'; INSERT INTO \"SiteTree\" (\"Content\") values ('\nUPDATE \"File\" SET \"Name\" = 'somename' WHERE \"ID\" = 79;\n')";
 		$commands = DBP_Sql::split_script($script);
@@ -73,7 +73,7 @@ class DBPlumberTest extends FunctionalTest {
 		$script = "SELECT * FROM \"SiteTree\"";
 		$result = DBP_Sql::execute_script($script);
 		$this->assertType('array', $result, 'Result is array');
-		$this->assertEquals($script, $result['Query'], 'Return SELECT command correctly');
+		$this->assertEquals($script . ';', $result['Query'], 'Return SELECT command correctly');
 		$this->assertEquals("DBP_Field", get_class($result['Fields']->First()), 'Result contains fields');
 		$this->assertEquals("DBP_Record", get_class($result['Records']->First()), 'Result contains records');
 		$this->assertNotEquals('error', $result['Message']['type'], 'No errors message');
@@ -81,14 +81,14 @@ class DBPlumberTest extends FunctionalTest {
 		// only one command, without output
 		$script = "INSERT INTO \"ErrorPage\" (\"ID\", \"ErrorCode\") VALUES ('99', '999')";
 		$result = DBP_Sql::execute_script($script);
-		$this->assertEquals($script, $result['Query'], 'Return UPDATE command correctly');
+		$this->assertEquals($script . ';', $result['Query'], 'Return UPDATE command correctly');
 		$this->assertNotEquals('error', $result['Message']['type'], 'No errors message');
 		$this->assertEquals(999, DB::query("SELECT \"ErrorCode\" FROM \"ErrorPage\" WHERE \"ID\" = '99'")->Value(), 'Make sure the query really gets executed');
 		
 		// only one command, forcing an error
 		$script = "force error";
 		$result = DBP_Sql::execute_script($script);
-		$this->assertEquals($script, $result['Query'], 'Return ERROR command correctly');
+		$this->assertEquals($script . ';', $result['Query'], 'Return ERROR command correctly');
 		$this->assertEquals('error', $result['Message']['type'], 'Return error');
 		$this->assertType('string', $result['Message']['text'], 'Return error message');
 		
