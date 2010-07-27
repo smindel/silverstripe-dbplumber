@@ -31,12 +31,14 @@ function msgbx(text,status) {
 		$("#tabs").tabs({
 			select: function(e,u){
 				if(u.index == 3) {
+					if(!confirm('This action deletes all records in this table. Do you want to proceed?')) return false;
 					msgbx('empty table', 'waiting');
 					$('#right div.main').load($('#empty_form').attr('action'), function(){
 						msgbx('done', 'good');
 						initRight();
 					});
 				} else if(u.index == 4) {
+					if(!confirm('This action deletes this table. Do you want to proceed?')) return false;
 					msgbx('drop table', 'waiting');
 					$('#right div.main').load($('#drop_form').attr('action'), function(){
 						msgbx('done', 'good');
