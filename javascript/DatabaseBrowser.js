@@ -44,7 +44,6 @@ function msgbx(text,status) {
 						document.location.href = document.location.href;
 					});
 				}
-				return false;
 			}
 		});
 		
