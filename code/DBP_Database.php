@@ -45,6 +45,10 @@ class DBP_Database extends ViewableData {
 		return Controller::curr()->Link();
 	}
 
+	function drop($table) {
+		DB::query('DROP TABLE "' . $table . '"');
+	}
+
 }
 
 class DBP_Database_Controller extends DBP_Controller {
@@ -108,4 +112,8 @@ class DBP_Database_Controller extends DBP_Controller {
 		return $result ? $result->renderWith('DBP_Database_sql') : $this->instance->renderWith('DBP_Database_sql');
 	}
 	
+	function drop($request) {
+		$this->instance->drop($request->param('ID'));
+		return $this->instance->renderWith('DBP_Database');
+	}
 }

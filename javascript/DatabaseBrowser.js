@@ -28,7 +28,26 @@ function msgbx(text,status) {
 		$("#tabs").livequery(function(){$(this).tabs()});
 		$("#right table.kike").livequery(function(){$(this).kiketable_colsizable(kikeoptions)});
 
-		$("#tabs").tabs();
+		$("#tabs").tabs({
+			select: function(e,u){
+				if(u.index == 3) {
+					msgbx('empty table', 'waiting');
+					$('#right div.main').load($('#empty_form').attr('action'), function(){
+						msgbx('done', 'good');
+						initRight();
+					});
+				} else if(u.index == 4) {
+					msgbx('drop table', 'waiting');
+					$('#right div.main').load($('#drop_form').attr('action'), function(){
+						msgbx('done', 'good');
+						initRight();
+						document.location.href = document.location.href;
+					});
+				}
+				return false;
+			}
+		});
+		
 		$("#right table.kike").kiketable_colsizable(kikeoptions);
 		
 		$('#importformdiv form').ajaxForm({

@@ -26,6 +26,10 @@ class DBP_Table extends ViewableData {
 		return $fields;
 
 	}
+	
+	function truncate() {
+		if($this->Name) DB::query('DELETE FROM "' . $this->Name . '"');
+	}
 
 	function requestVar($key) {
 		$vars = Controller::curr()->getRequest()->requestVars();
@@ -85,6 +89,11 @@ class DBP_Table_Controller extends DBP_Controller {
 
 	function index() {
 		return $this->instance->renderWith('DBP_Table_index');
+	}
+
+	function truncate() {
+		$this->instance->truncate();
+		return $this->instance->renderWith('DBP_Table');
 	}
 
 }

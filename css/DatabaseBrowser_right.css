@@ -11,6 +11,18 @@ h1 span.small {
 	overflow:hidden;
 }
 
+#tabs a.warn, #tabs a.WARN {
+	color:#800;
+}
+
+#tabs a.warn:hover, #tabs a.WARN:hover {
+	color:#d00;
+}
+
+#tabs a.WARN {
+	font-weight:bold;
+}
+
 .ui-tabs-nav {
 	height:25px;
 }
