@@ -26,6 +26,17 @@ class DBP {
 				} else {
 					return sprintf('SELECT %s FROM "%s"%s', $column, $table, $filter);
 				}
+			case 'oracle':
+				if($filter) $filter = sprintf(" WHERE (%s)\n", $filter);
+				if(empty($order)) $order = '"ID" ASC';
+				if($limit || $offset) {
+					$select = sprintf('SELECT %s FROM "%s"%s', $column, $table, $filter);
+					if(isset($offset)) $text = "SELECT $column FROM ($select) WHERE ROWNUM BETWEEN $offset AND " . ($offset + $limit);
+					else $text = "SELECT $column FROM ($select) WHERE ROWNUM <= " . $limit;
+					return $text;
+				} else {
+					return sprintf('SELECT %s FROM "%s"%s', $column, $table, $filter);
+				}
 			default:
 				if($filter) $filter = sprintf(" WHERE (%s)", $filter);
 				if($order) $order = sprintf(" ORDER BY %s", $order);
