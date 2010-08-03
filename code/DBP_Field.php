@@ -61,7 +61,6 @@ class DBP_Field extends ViewableData {
 
 	function Ordered() {
 		$vars = Controller::curr()->getRequest()->requestVars();
-//		aDebug($vars);die();
 		if(empty($vars['orderby']) || $vars['orderby'] != $this->Label) return false;
 		$vars['orderdir'] = (isset($vars['orderdir']) && $vars['orderdir'] == 'DESC') ? 'DESC' : 'ASC';
 		return $vars['orderdir'];
