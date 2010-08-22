@@ -26,8 +26,13 @@ class DatabaseBrowser extends LeftAndMain {
 		'drop' => 'ADMIN',
 	);
 
-	function init() {
+	function init() {		
 		parent::init();
+		
+		// somehow themed css gets mixed in, remove it
+		$reqbe = Requirements::backend();
+		foreach($reqbe->get_css() as $file => $val); if(preg_match('/^themes\//', $file)) Requirements::block($file);
+		
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-form/jquery.form.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
@@ -36,6 +41,8 @@ class DatabaseBrowser extends LeftAndMain {
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.theme.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.tabs.css');
 		
+		Requirements::clear('jsparty/prototype.js');
+
 		Requirements::javascript("dbplumber/javascript/DatabaseBrowser.js");
 		Requirements::javascript("dbplumber/thirdparty/jquery.event.drag-1.4.js");
 		Requirements::javascript("dbplumber/thirdparty/jquery.kiketable.colsizable-1.1.js");
