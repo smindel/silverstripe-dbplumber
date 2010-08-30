@@ -60,7 +60,7 @@ class DatabaseBrowser extends LeftAndMain {
 	 	return preg_match('/^(\w+)/', $this->urlParams['ID'], $matches) ? new DBP_Table($matches[1]) : false;
 	}
 	
-	function index(SS_HTTP_Request $request) {
+	function index(SS_HTTPRequest $request) {
 		if(Director::is_ajax()) {
 			return $this->delegate($request);
 		} else {
@@ -68,17 +68,17 @@ class DatabaseBrowser extends LeftAndMain {
 		}
 	}
 
-	function show(SS_HTTP_Request $request) { return $this->delegate($request); }
-	function delete(SS_HTTP_Request $request) { return $this->delegate($request); }
-	function execute(SS_HTTP_Request $request) { return $this->delegate($request); }
-	function form(SS_HTTP_Request $request) { return $this->delegate($request); }
-	function save(SS_HTTP_Request $request) { return $this->delegate($request); }
-	function export(SS_HTTP_Request $request) { return $this->delegate($request); }
-	function import(SS_HTTP_Request $request) { return $this->delegate($request); }
-	function truncate(SS_HTTP_Request $request) { return $this->delegate($request); }
-	function drop(SS_HTTP_Request $request) { return $this->delegate($request); }
+	function show(SS_HTTPRequest $request) { return $this->delegate($request); }
+	function delete(SS_HTTPRequest $request) { return $this->delegate($request); }
+	function execute(SS_HTTPRequest $request) { return $this->delegate($request); }
+	function form(SS_HTTPRequest $request) { return $this->delegate($request); }
+	function save(SS_HTTPRequest $request) { return $this->delegate($request); }
+	function export(SS_HTTPRequest $request) { return $this->delegate($request); }
+	function import(SS_HTTPRequest $request) { return $this->delegate($request); }
+	function truncate(SS_HTTPRequest $request) { return $this->delegate($request); }
+	function drop(SS_HTTPRequest $request) { return $this->delegate($request); }
 	
-	protected function delegate(SS_HTTP_Request $request) {
+	protected function delegate(SS_HTTPRequest $request) {
 		if(array_search(strtolower($request->Param('Control')), self::$managed_models) === false) throw new Exception('Invalid Sub Controller "' . $request->Param('Control') . '"');
 		if(!preg_match('/^[a-z0-9_\.]*$/i', $request->Param('ID'))) throw new Exception('Invalid ' . $request->Param('Control') . ' ID "' . $request->Param('ID') . '"');
 		$subcontrollerclass = 'DBP_' . ucfirst(strtolower($request->Param('Control'))) . '_Controller';
