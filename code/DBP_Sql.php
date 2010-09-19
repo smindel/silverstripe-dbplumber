@@ -15,7 +15,7 @@ class DBP_Sql {
 	function execute() {
 		set_error_handler('exception_error_handler');
 		$results = false;
-		$msg = array('text' => 'no errors', 'type' => 'good');
+		$msg = array('text' => $this->type() == 'SELECT' ? 'no records' : 'no errors', 'type' => 'good');
 		try {
 			$results = DB::getConn()->query($this->query, E_USER_NOTICE);
 		} catch(Exception $e) {
