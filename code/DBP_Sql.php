@@ -135,7 +135,6 @@ class DBP_Sql {
 			if($scope == 'root') {
 				if($char == '"') $scope = 'identifier';
 				if($char == "'") $scope = 'literal';
-				if($char == "(") $scope = 'bracket';
 			} else if($scope == 'identifier' && $char == '"') {
 				$scope = 'root';
 			} else if($scope == 'literal' && $char == "'" && substr($output[$index],-1) != "\\") {
@@ -170,6 +169,7 @@ class DBP_Sql {
 			if(empty($command) || $command == ';') continue;
 			$commands[] = $command;
 		}
+//		aDebug($commands); die();
 		return $commands;
 	}
 			
