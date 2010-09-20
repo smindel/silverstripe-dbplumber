@@ -73,7 +73,8 @@ class DBP_Database_Controller extends DBP_Controller {
 	
 	function backup($tables) {
 		$commands = array();
-		if(DB::getConn() instanceof MSSQLDatabase) $commands[] = 'SET IDENTITY_INSERT ON;';
+		if(DB::getConn() instanceof MySQLDatabase) $commands[] = "SET sql_mode = 'ANSI';";
+		if(DB::getConn() instanceof MSSQLDatabase) $commands[] = "SET IDENTITY_INSERT ON;";
 		foreach($tables as $table) {
 			$fields = array();
 			$commands[] = 'DELETE FROM "' . $table . '";';
