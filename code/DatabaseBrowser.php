@@ -31,7 +31,7 @@ class DatabaseBrowser extends LeftAndMain {
 		
 		// somehow themed css gets mixed in, remove it
 		$reqbe = Requirements::backend();
-		foreach($reqbe->get_css() as $file => $val); if(preg_match('/^themes\//', $file)) Requirements::block($file);
+		foreach($reqbe->get_css() as $file => $val) if(preg_match('/^themes\//', $file)) Requirements::block($file);
 		
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-form/jquery.form.js');
