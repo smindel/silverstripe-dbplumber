@@ -35,4 +35,10 @@
 							<% end_control %>
 						<% end_if %>
 					<% end_if %>
+				<% else %>
+					<% if Message %>
+						<% control Message %>
+							<div class='ui-state-$type ui-corner-all'><p>$text</p></div>
+						<% end_control %>
+					<% end_if %>
 				<% end_if %>

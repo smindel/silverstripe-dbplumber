@@ -110,7 +110,7 @@ class DBP_Database_Controller extends DBP_Controller {
 			}
 		}
 
-		return $result ? $result->renderWith('DBP_Database_sql') : $this->instance->renderWith('DBP_Database_sql');
+		return $result ? $result->renderWith('DBP_Database_sql') : $this->instance->customise(array('Message' => array('type' => 'error', 'text' => 'Your file could not be imported. You might want to check if the file size exceeds 16m or your servers post_max_size or upload_max_filesize.')))->renderWith('DBP_Database_sql');
 	}
 	
 	function drop($request) {
