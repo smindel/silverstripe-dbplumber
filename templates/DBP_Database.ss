@@ -59,7 +59,7 @@
 						<label for="exporttype">Import type</label>
 						<div class="input"><input id='importtype' name='importtype' value='rawsql' type="radio" checked="checked"> SQL commands</div>
 					</div>
-					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only import" aria-disabled="false" type="submit"><a href='#'>import</a></button>
+					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only import" aria-disabled="false" type="submit"><span>import</span></button>
 				</form>
 			</div>
 		</div>
