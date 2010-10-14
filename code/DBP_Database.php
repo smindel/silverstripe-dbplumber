@@ -49,6 +49,24 @@ class DBP_Database extends ViewableData {
 		DB::query('DROP TABLE "' . $table . '"');
 	}
 
+	function MaxFileSize() {
+		$max = 1073741824;
+		$limits = array('post_max_size', 'upload_max_filesize');
+		foreach($limits as $key) {
+			if(preg_match('/^(\d+)(\w)$/i', trim(ini_get($key)), $matches)) {
+				$limit = (int)$matches[1];
+				$modifier = strtolower($matches[2]);
+				switch($modifier) {
+					case 'g': $limit *= 1024;
+					case 'm': $limit *= 1024;
+					case 'k': $limit *= 1024;
+				}
+				if($max > $limit) $max = $limit;
+			}
+		}
+		return $max;
+	}
+	
 }
 
 class DBP_Database_Controller extends DBP_Controller {
@@ -70,7 +88,7 @@ class DBP_Database_Controller extends DBP_Controller {
 				break;
 		}
 	}
-	
+
 	function backup($tables) {
 		$commands = array();
 		if(DB::getConn() instanceof MySQLDatabase) $commands[] = "SET sql_mode = 'ANSI';";
@@ -110,7 +128,7 @@ class DBP_Database_Controller extends DBP_Controller {
 			}
 		}
 
-		return $result ? $result->renderWith('DBP_Database_sql') : $this->instance->customise(array('Message' => array('type' => 'error', 'text' => 'Your file could not be imported. You might want to check if the file size exceeds 16m or your servers post_max_size or upload_max_filesize.')))->renderWith('DBP_Database_sql');
+		return $result ? $result->renderWith('DBP_Database_sql') : $this->instance->customise(array('Message' => array('type' => 'error', 'text' => 'Your file could not be imported. You might want to check if the file size exceeds ' . $this->instance->MaxFileSize() . ' which is the limit set in post_max_size and upload_max_filesize in your php.ini.')))->renderWith('DBP_Database_sql');
 	}
 	
 	function drop($request) {

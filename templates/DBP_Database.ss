@@ -50,9 +50,9 @@
 			</div>
 			<div id='importformdiv' class='importexportdiv'>
 				<form action='admin/dbplumber/database/import' method="post" enctype="multipart/form-data">
-					<input type="hidden" name="MAX_FILE_SIZE" value="16777216" />
+					<input type="hidden" name="MAX_FILE_SIZE" value="$MaxFileSize" />
 					<div>
-						<label for="importfile">Import SQL File</label>
+						<label for="importfile">Import SQL File (max file size $MaxFileSize)</label>
 						<div class="input"><input id='importfile' name='importfile' type="file"></div>
 					</div>
 					<div>
