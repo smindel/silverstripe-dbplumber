@@ -25,7 +25,29 @@ class DatabaseBrowser extends LeftAndMain {
 		'truncate' => 'ADMIN',
 		'drop' => 'ADMIN',
 	);
+	
+	// limit DBPlumber to certain environments
+	static $trusted_envs = array('live', 'test', 'dev');
 
+	// limit DBPlumber to trusted IPs
+	static $trusted_ips = null;
+
+	// deactivate DBPlumber, useful in combination with _ss_environment.php
+	static $activated = true;
+	
+	function canView() {
+		if(self::$trusted_envs && !in_array(Director::get_environment_type(), self::$trusted_envs)) return false;
+		if(self::$trusted_ips && !in_array($_SERVER['REMOTE_ADDR'], self::$trusted_ips)) return false;
+		if(!self::$activated) return false;
+		return parent::canView();
+	}
+	
+	// hide DBPlumber from the CMS menu. Useful if DBPlumber is accessible but
+	// you don't want it to appear in the CMS but only access it through http://your-domain.com/admin/dbplumber
+	static function hide_from_menu() {
+		CMSMenu::remove_menu_item('DatabaseBrowser');
+	}
+	
 	function init() {		
 		parent::init();
 		
