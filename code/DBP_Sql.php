@@ -146,11 +146,14 @@ class DBP_Sql {
 			// add the current character to the current command
 			if(!empty($output[$index]) || $char != ' ') {
 				if($doindent && $char == ' ' && preg_match('/\bSELECT$|\bFROM$|\bWHERE$|\bGROUP BY$|\bHAVING$|\bJOIN$|\bUNION$|\bINTERSECT$|\bEXCEPT$|\bUPDATE$|\bSET$|\bINSERT INTO$|\bVALUES$|\bORDER BY$|\bLIMIT$/i', $output[$index])) {
-					$output[$index] .= "\n" . str_repeat("\t", ++$indent);
+					$ind = ++$indent > 0 ? str_repeat("\t", $indent) : '';
+					$output[$index] .= "\n$ind";
 				} else if($doindent && $char == ' ' && !empty($output[$index]) && preg_match('/^\s+FROM\b|^\s+WHERE\b|^\s+GROUP BY\b|^\s+HAVING\b|^\s+LEFT\b|^\s+RIGHT\b|^\s+INNER\b|^\s+UNION\b|^\s+INTERSECT\b|^\s+EXCEPT\b|^\s+UPDATE\b|^\s+SET\b|^\s+INSERT INTO\b|^\s+VALUES\b|^\s+ORDER BY\b|^\s+LIMIT\b/i', substr($commands,$i))) {
-					$output[$index] .= "\n" . str_repeat("\t", --$indent);
+					$ind = --$indent > 0 ? str_repeat("\t", $indent) : '';
+					$output[$index] .= "\n$ind";
 				} else if($doindent && $char == ' ' && $scope == 'root' && preg_match('/,$|\bAND$|\bOR$/i', $output[$index])) {
-					$output[$index] .= "\n" . str_repeat("\t", $indent);
+					$ind = $indent > 0 ? str_repeat("\t", $indent) : '';
+					$output[$index] .= "\n$ind";
 				} else {
 					$output[$index] .= $char;
 				}
@@ -169,7 +172,6 @@ class DBP_Sql {
 			if(empty($command) || $command == ';') continue;
 			$commands[] = $command;
 		}
-//		aDebug($commands); die();
 		return $commands;
 	}
 			
