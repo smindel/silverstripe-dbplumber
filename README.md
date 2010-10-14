@@ -16,6 +16,23 @@ This module is designed for developers and not for content authors. That is why 
 ## Installation
  1. follow the usual [module installation process](http://doc.silverstripe.org/modules#installation)
 
+## Setup
+Use the following static properties and methods to control DBPlumber
+
+### Limit DBPlumber to certain environments
+DatabaseBrowser::$trusted_envs = array('test', 'dev');
+
+### Limit DBPlumber to trusted IPs
+The IPs are matched against $_SERVER['REMOTE_ADDR'] so if it is misbehaving check your $_SERVER['REMOTE_ADDR'] which sometimes return unexpected values like ::1
+DatabaseBrowser::$trusted_ips = array('127.0.0.1');
+
+### Deactivate DBPlumber, useful in combination with _ss_environment.php
+DatabaseBrowser::$activated = false;
+
+### Hide DBPlumber from the CMS menu. Useful if DBPlumber is accessible but
+If you don't want it to appear in the CMS but only access it through http://your-domain.com/admin/dbplumber
+DatabaseBrowser::hide_from_menu();
+
 ## Description
 
  * Ever wanted to just browse a database table or CRUD records, BUT you didn't have a suitable SQL client at hand?
@@ -34,16 +51,16 @@ It is not as powerful as phpMyAdmin but it is very lightweight and works with al
  * Click on records to select them for deletion or double click to edit them.
  * Use the form tab to insert a new record to a table.
  * Export tables
- * Bulk execute SQL files/backups
+ * Bulk execute SQL files/backups, now supports Zlib compression
+ * Truncate or drop tables
+ * Access to DBPlumber is limited to ADMINs and can be further restricted to trusted IPs, env types (e.g. 'dev' and 'test' only) and it can be hidden from the CMS main menu
 
 ## Open Issues
 
  * Misbehaving js/css in IE
- * insert/update form does not account for NULL, needs testing for quotes
 
 ## Planned Features
 
- * syntax highlighter / checker
  * saving of custom queries
 
 ## Feedback

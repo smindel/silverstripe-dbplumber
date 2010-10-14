@@ -67,6 +67,9 @@ class DBP_Database extends ViewableData {
 		return $max;
 	}
 	
+	function HasZlibSupport() {
+		return function_exists('gzencode');
+	}
 }
 
 class DBP_Database_Controller extends DBP_Controller {
@@ -84,7 +87,16 @@ class DBP_Database_Controller extends DBP_Controller {
 	function export($request) {
 		switch($request->postVar('exporttype')) {
 			case 'backup':
-				$this->backup($request->postVar('tables'));
+				$commands = implode("\r\n", $this->backup($request->postVar('tables')));
+				header("Content-type: text/sql; charset=utf-8");
+				header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '_' . $this->instance->Type() .  '.sql"');
+				echo $commands;
+				break;
+			case 'compressed':
+				$commands = gzencode(implode("\r\n", $this->backup($request->postVar('tables'))), 9);
+				header("Content-type: gzip; charset=utf-8");
+				header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '_' . $this->instance->Type() .  '.sql.gz"');
+				echo $commands;
 				break;
 		}
 	}
@@ -114,17 +126,22 @@ class DBP_Database_Controller extends DBP_Controller {
 			}
 		}
 		if(DB::getConn() instanceof MSSQLDatabase) $commands[] = 'SET IDENTITY_INSERT OFF;';
-		header("Content-type: text/sql; charset=utf-8");
-		header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '_' . $this->instance->Type() .  '.sql"');
-		foreach($commands as $command) echo $command . "\r\n";
+		return $commands;
 	}
 	
 	function import($request) {
 		$result = false;
 		$file = $request->postVar('importfile');
 		if(!empty($file['tmp_name'])) {
-			if($request->postVar('importtype') == 'rawsql') {
-				$result = new ArrayData(DBP_Sql::execute_script(file($file['tmp_name'])));
+			$importtype = $request->postVar('importtype');
+			if($importtype == 'auto') $importtype = strtolower(substr($file['name'],-3) == '.gz') ? 'compressedsql' : 'rawsql';
+			switch($importtype) {
+				case 'rawsql':
+					$result = new ArrayData(DBP_Sql::execute_script(file($file['tmp_name'])));
+					break;
+				case 'compressedsql':
+					$result = new ArrayData(DBP_Sql::execute_script(gzfile($file['tmp_name'])));
+					break;
 			}
 		}
 

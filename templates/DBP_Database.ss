@@ -34,7 +34,7 @@
 					<div>
 						<label for="tablenames">Tables to export</label>
 						<div class="input">
-							<select id='tablenames' name="tables[]" size="10" MULTIPLE>
+							<select id="tablenames" name="tables[]" size="10" MULTIPLE>
 								<% control Tables %>
 									<option value="$Name" selected="selected">$Name</option>
 								<% end_control %>
@@ -44,6 +44,7 @@
 					<div>
 						<label for="exporttype">Export type</label>
 						<div class="input"><input id='exporttype' name='exporttype' value='backup' type="radio" checked="checked"> Backup (SQL DELETEs and INSERTs)</div>
+						<% if HasZlibSupport %><div class="input"><input id='exporttype' name='exporttype' value='compressed' type="radio"> Backup compressed using ZLIB</div><% end_if %>
 					</div>
 					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only export" aria-disabled="false" type="submit"><a href='#'>export</a></button>
 				</form>
@@ -57,7 +58,9 @@
 					</div>
 					<div>
 						<label for="exporttype">Import type</label>
-						<div class="input"><input id='importtype' name='importtype' value='rawsql' type="radio" checked="checked"> SQL commands</div>
+						<div class="input"><input id='importtype' name='importtype' value='rawsql' type="radio"> SQL commands</div>
+						<% if HasZlibSupport %><div class="input"><input id='importtype' name='importtype' value='compressedsql' type="radio"> ZLIB compressed SQL commands</div><% end_if %>
+						<div class="input"><input id='importtype' name='importtype' value='auto' type="radio" checked="checked"> auto detect by file name extension</div>
 					</div>
 					<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only import" aria-disabled="false" type="submit"><span>import</span></button>
 				</form>
