@@ -61,8 +61,16 @@ class DatabaseBrowser extends LeftAndMain {
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-form/jquery.form.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-livequery/jquery.livequery.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.core.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.widget.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.mouse.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.tabs.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.button.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.position.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.dialog.js');
+
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.core.css');
+		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.dialog.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.theme.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.tabs.css');
 		

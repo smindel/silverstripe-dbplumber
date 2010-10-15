@@ -76,6 +76,7 @@ class DBP_Database extends ViewableData {
 		if(!DatabaseBrowser::$expose_config) return;
 		$config = new DataObjectSet();
 		foreach($databaseConfig as $key => $val) {
+			if(!$val) continue;
 			if($key == "password") $val = "*****";
 			$key = ucfirst($key);
 			$config->push(new ArrayData(array('key' => $key, 'val' => $val)));

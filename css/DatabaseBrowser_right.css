@@ -188,3 +188,18 @@ h1 span.small {
 	border-color:#FF8E8E;
 	color:#C80700;
 }
+
+.DBP_HELP h3 {
+	font-size:1.5em;
+}
+
+.DBP_HELP li {
+	margin-left:20px;
+	list-style:disc outside none;
+}
+
+.DBP_HELP h3,
+.DBP_HELP ul,
+.DBP_HELP p {
+	margin-bottom:1.5em;
+}
