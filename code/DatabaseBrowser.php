@@ -35,6 +35,9 @@ class DatabaseBrowser extends LeftAndMain {
 	// deactivate DBPlumber, useful in combination with _ss_environment.php
 	static $activated = true;
 	
+	// expose config in info tab, password will always be omitted
+	static $expose_config = true;
+	
 	function canView() {
 		if(self::$trusted_envs && !in_array(Director::get_environment_type(), self::$trusted_envs)) return false;
 		if(self::$trusted_ips && !in_array($_SERVER['REMOTE_ADDR'], self::$trusted_ips)) return false;

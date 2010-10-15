@@ -23,6 +23,14 @@
 					<td>Transactions</td>
 					<td><% if Transactions %>supported<% else %>not supported<% end_if %></td>
 				</tr>
+				<% if ExposeConfig %>
+				<% control ExposeConfig %>
+				<tr class='$EvenOdd'>
+					<td>$key</td>
+					<td>$val</td>
+				</tr>
+				<% end_control %>
+				<% end_if %>
 			</table>
 		</div>
 		<div id="sql-tab" class='tabbody'>

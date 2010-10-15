@@ -70,6 +70,18 @@ class DBP_Database extends ViewableData {
 	function HasZlibSupport() {
 		return function_exists('gzencode');
 	}
+	
+	function ExposeConfig() {
+		global $databaseConfig;
+		if(!DatabaseBrowser::$expose_config) return;
+		$config = new DataObjectSet();
+		foreach($databaseConfig as $key => $val) {
+			if($key == "password") $val = "*****";
+			$key = ucfirst($key);
+			$config->push(new ArrayData(array('key' => $key, 'val' => $val)));
+		}
+		return $config;
+	}
 }
 
 class DBP_Database_Controller extends DBP_Controller {
@@ -104,9 +116,9 @@ class DBP_Database_Controller extends DBP_Controller {
 	function backup($tables) {
 		$commands = array();
 		if(DB::getConn() instanceof MySQLDatabase) $commands[] = "SET sql_mode = 'ANSI';";
-		if(DB::getConn() instanceof MSSQLDatabase) $commands[] = "SET IDENTITY_INSERT ON;";
 		foreach($tables as $table) {
 			$fields = array();
+			if(DB::getConn() instanceof MSSQLDatabase && ($idcol = DB::getConn()->getIdentityColumn($table))) $commands[] = "SET IDENTITY_INSERT \"$table\" ON;";
 			$commands[] = 'DELETE FROM "' . $table . '";';
 			foreach(DB::fieldList($table) as $name => $spec) $fields[] = $name;
 			foreach(DB::query('SELECT * FROM "' . $table . '"') as $record) {
@@ -124,8 +136,8 @@ class DBP_Database_Controller extends DBP_Controller {
 					implode(", ", $cells) . 
 					");";
 			}
+			if(DB::getConn() instanceof MSSQLDatabase && $idcol) $commands[] = "SET IDENTITY_INSERT \"$table\" OFF;";
 		}
-		if(DB::getConn() instanceof MSSQLDatabase) $commands[] = 'SET IDENTITY_INSERT OFF;';
 		return $commands;
 	}
 	

@@ -14,24 +14,36 @@ This module is designed for developers and not for content authors. That is why 
 **Do not use in production!**
 
 ## Installation
+
  1. follow the usual [module installation process](http://doc.silverstripe.org/modules#installation)
 
 ## Setup
+
 Use the following static properties and methods to control DBPlumber
 
 ### Limit DBPlumber to certain environments
-DatabaseBrowser::$trusted_envs = array('test', 'dev');
+
+	DatabaseBrowser::$trusted_envs = array('test', 'dev');
 
 ### Limit DBPlumber to trusted IPs
+
 The IPs are matched against $_SERVER['REMOTE_ADDR'] so if it is misbehaving check your $_SERVER['REMOTE_ADDR'] which sometimes return unexpected values like ::1
-DatabaseBrowser::$trusted_ips = array('127.0.0.1');
+
+	DatabaseBrowser::$trusted_ips = array('127.0.0.1');
 
 ### Deactivate DBPlumber, useful in combination with _ss_environment.php
-DatabaseBrowser::$activated = false;
+
+	DatabaseBrowser::$activated = false;
 
 ### Hide DBPlumber from the CMS menu. Useful if DBPlumber is accessible but
+
 If you don't want it to appear in the CMS but only access it through http://your-domain.com/admin/dbplumber
-DatabaseBrowser::hide_from_menu();
+
+	DatabaseBrowser::hide_from_menu();
+
+### Hide database config from info tab
+
+	DatabaseBrowser::$expose_config = false;
 
 ## Description
 
