@@ -6,6 +6,12 @@
 ## Requirements
  * SilverStripe 2.4 or newer
 
+## DB Adapter Support
+ * MySQL
+ * SQLite
+ * Postgres
+ * SQL Server
+ * Oracle (experimental)
 
 ## WARNING !
 

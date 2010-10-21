@@ -18,6 +18,18 @@ class DBP_Database extends ViewableData {
 		return get_class(DB::getConn());
 	}
 
+	function Adapters() {
+		$names = array(
+			'MySQL',
+			'SQLite',
+			'MSSQL',
+			'Postgres',
+		);
+		$adapters = new DataObjectSet();
+		foreach($names as $name) $adapters->push(new ArrayData(array('Name' => $name, 'Available' => (bool)(DB::getConn() instanceof MSSQLDatabase || $name != 'MSSQL'), 'Selected' => (bool)preg_match('/^' . $name . '/i', get_class(DB::getConn())))));
+		return $adapters;
+	}
+
 	function Transactions() {
 		return DB::getConn()->supportsTransactions();
 	}
@@ -98,28 +110,41 @@ class DBP_Database_Controller extends DBP_Controller {
 	}
 	
 	function export($request) {
+		$dialect = $request->postVar('SqlDialect');
 		switch($request->postVar('exporttype')) {
 			case 'backup':
-				$commands = implode("\r\n", $this->backup($request->postVar('tables')));
+				$commands = implode("\r\n", $this->backup($request->postVar('tables'), $dialect));
 				header("Content-type: text/sql; charset=utf-8");
-				header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '_' . $this->instance->Type() .  '.sql"');
+				header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '_' . $dialect .  '.sql"');
 				echo $commands;
 				break;
 			case 'compressed':
-				$commands = gzencode(implode("\r\n", $this->backup($request->postVar('tables'))), 9);
+				$commands = gzencode(implode("\r\n", $this->backup($request->postVar('tables'), $dialect)), 9);
 				header("Content-type: gzip; charset=utf-8");
-				header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '_' . $this->instance->Type() .  '.sql.gz"');
+				header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '_' . $dialect .  '.sql.gz"');
 				echo $commands;
 				break;
 		}
 	}
 
-	function backup($tables) {
-		$commands = array();
-		if(DB::getConn() instanceof MySQLDatabase) $commands[] = "SET sql_mode = 'ANSI';";
+	function backup($tables, $dialect) {
+		global $databaseConfig;
+
+		$commands = array(
+			'/*',
+			'   SQL Dump of ' . get_class(DB::getConn()) . ' ' . DB::getConn()->currentDatabase() . (DB::getConn() instanceof Sqlite3Database ? ' in ' . $databaseConfig['path'] : ' on ' . $databaseConfig['server']),
+			"   SQL Dialect $dialect",
+			'   Created on ' . date('r'),
+			'   Created with Database Plumber for Silverstripe',
+			"   =============================================",
+			"   DISCLAIMER: NO WARRANTY, USE AT YOUR OWN RISC",
+			"   =============================================",
+			'*/', ''
+		);
+		if($dialect == 'MySQL') $commands[] = "SET sql_mode = 'ANSI';";
 		foreach($tables as $table) {
 			$fields = array();
-			if(DB::getConn() instanceof MSSQLDatabase && ($idcol = DB::getConn()->getIdentityColumn($table))) $commands[] = "SET IDENTITY_INSERT \"$table\" ON;";
+			if($dialect == 'MSSQL' && ($idcol = DB::getConn()->getIdentityColumn($table))) $commands[] = "SET IDENTITY_INSERT \"$table\" ON;";
 			$commands[] = 'DELETE FROM "' . $table . '";';
 			foreach(DB::fieldList($table) as $name => $spec) $fields[] = $name;
 			foreach(DB::query('SELECT * FROM "' . $table . '"') as $record) {
@@ -137,7 +162,7 @@ class DBP_Database_Controller extends DBP_Controller {
 					implode(", ", $cells) . 
 					");";
 			}
-			if(DB::getConn() instanceof MSSQLDatabase && $idcol) $commands[] = "SET IDENTITY_INSERT \"$table\" OFF;";
+			if($dialect == 'MSSQL' && $idcol) $commands[] = "SET IDENTITY_INSERT \"$table\" OFF;";
 		}
 		return $commands;
 	}
