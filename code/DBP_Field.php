@@ -30,12 +30,16 @@ class DBP_Field extends ViewableData {
 	function datatype() {
 		if(!$this->Table) return false;
 		$fl = DB::fieldList($this->Table);
-		if(is_array($fl[$this->Label])) {
-			$out ='';
-			foreach($fl[$this->Label] as $key => $val) $out .= "$key: $val<br />";
-			return $fl[$this->Label]['data_type'];
+		if(isset($fl[$this->Label])) {
+			if(is_array($fl[$this->Label])) {
+				$out ='';
+				foreach($fl[$this->Label] as $key => $val) $out .= "$key: $val<br />";
+				return $fl[$this->Label]['data_type'];
+			} else {
+				return $fl[$this->Label];
+			}
 		} else {
-			return $fl[$this->Label];
+			return "__HIDE__";
 		}
 	}
 	

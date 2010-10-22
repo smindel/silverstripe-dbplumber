@@ -28,19 +28,22 @@ class DBP_Record extends ViewableData {
 		foreach($this->data as $f => $v) {
 			$escaped = htmlentities($v,ENT_COMPAT, 'UTF-8');
 			$truncate = strlen($escaped) > 64 ? substr($escaped,0,63) . '<span class="truncated">&hellip;</span>' : $escaped;
-			$cells->push(
-				new ArrayData(
-					array(
-						'Column' => new DBP_Field($this->table . '.' . $f),
-						'Value' => array(
-							'raw' => $v, 
-							'escaped' => $escaped, 
-							'isNull' => is_null($v), 
-							'truncated' => $truncate
+			$field = new DBP_Field($this->table . '.' . $f);
+			if($field->datatype() != "__HIDE__") {
+				$cells->push(
+					new ArrayData(
+						array(
+							'Column' => $field,
+							'Value' => array(
+								'raw' => $v, 
+								'escaped' => $escaped, 
+								'isNull' => is_null($v), 
+								'truncated' => $truncate
+							)
 						)
 					)
-				)
-			);
+				);
+			}
 		}
 		return $cells;
 	}
