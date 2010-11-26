@@ -193,4 +193,41 @@ class DBP_Database_Controller extends DBP_Controller {
 		$this->instance->drop($request->param('ID'));
 		return $this->instance->renderWith('DBP_Database');
 	}
+	
+	function CleanUpSchema() {
+		$oldschema = array();
+		$newschema = array();
+		$current = DB::getConn()->currentDatabase();
+		foreach(DB::getConn()->tableList() as $lowercase => $dbtablename) $oldschema[$lowercase] = DB::getConn()->fieldList($dbtablename);
+
+		DB::getConn()->selectDatabase('tmpdb');
+		$test = new SapphireTest();
+		$test->create_temp_db();
+		foreach(DB::getConn()->tableList() as $lowercase => $dbtablename) $newschema[$lowercase] = DB::getConn()->fieldList($dbtablename);
+		$test->kill_temp_db();
+		DB::getConn()->selectDatabase($current);
+		
+		$msg = array();
+		foreach($oldschema as $table => $fields) {
+			if(!isset($newschema[$table])) {
+				DB::query("DROP TABLE \"$table\"");
+				$msg[] = $table;
+				continue;
+			}
+			
+			foreach($fields as $field => $spec) {
+				$obsolete = array();
+				if(!isset($newschema[$table][$field])) {
+					$obsolete [] = $field;
+					$msg[] = "{$table}.{$field}";
+				}
+				if(!empty($obsolete)) DB::query("ALTER TABLE \"$table\" DROP \"" . implode('", "', $obsolete) . "\"");
+			}
+		}
+		if(empty($msg)) {
+			Debug::show('Schema is clean, nothin to drop.');
+		} else {
+			Debug::show($msg);
+		}
+	}
 }

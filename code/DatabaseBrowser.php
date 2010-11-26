@@ -24,6 +24,7 @@ class DatabaseBrowser extends LeftAndMain {
 		'import' => 'ADMIN',
 		'truncate' => 'ADMIN',
 		'drop' => 'ADMIN',
+		'cleanupschema' => 'ADMIN',
 	);
 	
 	// limit DBPlumber to certain environments
@@ -110,6 +111,7 @@ class DatabaseBrowser extends LeftAndMain {
 	function import(SS_HTTPRequest $request) { return $this->delegate($request); }
 	function truncate(SS_HTTPRequest $request) { return $this->delegate($request); }
 	function drop(SS_HTTPRequest $request) { return $this->delegate($request); }
+	function cleanupschema(SS_HTTPRequest $request) { return $this->delegate($request); }
 	
 	protected function delegate(SS_HTTPRequest $request) {
 		if(array_search(strtolower($request->Param('Control')), self::$managed_models) === false) throw new Exception('Invalid Sub Controller "' . $request->Param('Control') . '"');
