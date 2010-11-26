@@ -40,7 +40,7 @@ class DBP_Database extends ViewableData {
 
 		foreach(DB::tableList() as $table) $tables->push(new DBP_Table($table));
 		
-		$tables->sort('Name');
+		$tables->sort('LowerCaseName');
 
 		return $tables;
 	}

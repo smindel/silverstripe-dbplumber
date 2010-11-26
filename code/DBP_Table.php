@@ -15,6 +15,10 @@ class DBP_Table extends ViewableData {
 		return $this->Name;
 	}
 	
+	function getLowerCaseName() {
+		return strtolower($this->Name);
+	}
+	
 	function Selected() {
 		return preg_match('/' . $this->Name . '(\..+)/', Controller::curr()->urlParams['ID']);
 	}
