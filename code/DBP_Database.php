@@ -210,7 +210,7 @@ class DBP_Database_Controller extends DBP_Controller {
 		$msg = array();
 		foreach($oldschema as $table => $fields) {
 			if(!isset($newschema[$table])) {
-				DB::query("DROP TABLE \"$table\"");
+				DBP_SQLDialect::drop_table($table);
 				$msg[] = $table;
 				continue;
 			}
@@ -221,7 +221,7 @@ class DBP_Database_Controller extends DBP_Controller {
 					$obsolete [] = $field;
 					$msg[] = "{$table}.{$field}";
 				}
-				if(!empty($obsolete)) DB::query("ALTER TABLE \"$table\" DROP \"" . implode('", "', $obsolete) . "\"");
+				if(!empty($obsolete)) DBP_SQLDialect::drop_columns($table, $obsolete);
 			}
 		}
 		if(empty($msg)) {
