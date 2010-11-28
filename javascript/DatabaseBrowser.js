@@ -30,14 +30,15 @@ function msgbx(text,status) {
 
 		$("#tabs").tabs({
 			select: function(e,u){
-				if(u.index == 3) {
+				var tab = (u.tab + '').split('#');
+				if(tab[1] == 'empty-tab') {
 					if(!confirm('This action deletes all records in this table. Do you want to proceed?')) return false;
 					msgbx('empty table', 'waiting');
 					$('#right div.main').load($('#empty_form').attr('action'), function(){
 						msgbx('done', 'good');
 						initRight();
 					});
-				} else if(u.index == 4) {
+				} else if(tab[1] == 'drop-tab') {
 					if(!confirm('This action deletes this table. Do you want to proceed?')) return false;
 					msgbx('drop table', 'waiting');
 					$('#right div.main').load($('#drop_form').attr('action'), function(){
@@ -45,6 +46,8 @@ function msgbx(text,status) {
 						initRight();
 						document.location.href = document.location.href;
 					});
+				} else if(tab[1] == 'artefact-tab') {
+					$('#artefact-tab').load('admin/dbplumber/database/showartefact');
 				}
 			}
 		});

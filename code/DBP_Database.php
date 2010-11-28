@@ -95,6 +95,35 @@ class DBP_Database extends ViewableData {
 		}
 		return $config;
 	}
+	
+	function Artefacts() {
+		$oldschema = array();
+		$newschema = array();
+		$current = DB::getConn()->currentDatabase();
+		foreach(DB::getConn()->tableList() as $lowercase => $dbtablename) $oldschema[$lowercase] = DB::getConn()->fieldList($dbtablename);
+
+		DB::getConn()->selectDatabase('tmpdb');
+		$test = new SapphireTest();
+		$test->create_temp_db();
+		foreach(DB::getConn()->tableList() as $lowercase => $dbtablename) $newschema[$lowercase] = DB::getConn()->fieldList($dbtablename);
+		$test->kill_temp_db();
+		DB::getConn()->selectDatabase($current);
+		
+		$artefacts = array();
+		foreach($oldschema as $table => $fields) {
+			if(!isset($newschema[$table])) {
+				$artefacts[$table] = $table;
+				continue;
+			}
+			
+			foreach($fields as $field => $spec) {
+				if(!isset($newschema[$table][$field])) {
+					$artefacts[$table][$field] = $field;
+				}
+			}
+		}
+		return $artefacts;
+	}
 }
 
 class DBP_Database_Controller extends DBP_Controller {
@@ -194,40 +223,21 @@ class DBP_Database_Controller extends DBP_Controller {
 		return $this->instance->renderWith('DBP_Database');
 	}
 	
-	function CleanUpSchema() {
-		$oldschema = array();
-		$newschema = array();
-		$current = DB::getConn()->currentDatabase();
-		foreach(DB::getConn()->tableList() as $lowercase => $dbtablename) $oldschema[$lowercase] = DB::getConn()->fieldList($dbtablename);
-
-		DB::getConn()->selectDatabase('tmpdb');
-		$test = new SapphireTest();
-		$test->create_temp_db();
-		foreach(DB::getConn()->tableList() as $lowercase => $dbtablename) $newschema[$lowercase] = DB::getConn()->fieldList($dbtablename);
-		$test->kill_temp_db();
-		DB::getConn()->selectDatabase($current);
-		
-		$msg = array();
-		foreach($oldschema as $table => $fields) {
-			if(!isset($newschema[$table])) {
-				DBP_SQLDialect::drop_table($table);
-				$msg[] = $table;
-				continue;
-			}
-			
-			foreach($fields as $field => $spec) {
-				$obsolete = array();
-				if(!isset($newschema[$table][$field])) {
-					$obsolete [] = $field;
-					$msg[] = "{$table}.{$field}";
-				}
-				if(!empty($obsolete)) DBP_SQLDialect::drop_columns($table, $obsolete);
-			}
-		}
-		if(empty($msg)) {
-			Debug::show('Schema is clean, nothin to drop.');
+	function showartefact() {
+		$artefacts = $this->instance->Artefacts();
+		if(empty($artefacts)) {
+			echo "The database does not contain obsolete tables or columns.";
 		} else {
-			Debug::show($msg);
+			echo "These tables / columns are obsolete: (<a href='dev/tasks/CleanUpSchemaTask'>CleanUpSchemaTask</a>)";
+			echo '<ul>';
+			foreach($artefacts as $table => $drop) {
+				if(is_array($drop)) {
+					echo "<li>column " . implode("</li><li>column ", $drop) . "</li>";
+				} else {
+					echo "<li>table $table</li>";
+				}
+			}
+			echo '</ul>';
 		}
 	}
 }

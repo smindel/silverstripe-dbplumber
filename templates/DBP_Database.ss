@@ -4,6 +4,7 @@
 			<li><a class='tabtabs' title="info-tab">Info</a></li>
 			<li><a class='tabtabs' title="sql-tab">SQL</a></li>
 			<li><a class='tabtabs' title="port-tab">Import / Export</a></li>
+			<li><a class='tabtabs' title="artefact-tab">Artefacts</a></li>
 		</ul>
 		<div id="info-tab" class='tabbody'>
 			<table>
@@ -91,5 +92,8 @@
 					</div>
 				</form>
 			</div>
+		</div>
+		<div id="artefact-tab" class='tabbody'>
+			Computing Artefacts...
 		</div>
 	</div>
