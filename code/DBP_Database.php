@@ -232,7 +232,7 @@ class DBP_Database_Controller extends DBP_Controller {
 			echo '<ul>';
 			foreach($artefacts as $table => $drop) {
 				if(is_array($drop)) {
-					echo "<li>column " . implode("</li><li>column ", $drop) . "</li>";
+					echo "<li>column {$table}." . implode("</li><li>column {$table}.", $drop) . "</li>";
 				} else {
 					echo "<li>table $table</li>";
 				}
