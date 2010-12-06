@@ -100,7 +100,7 @@ class DBP_Database extends ViewableData {
 		$oldschema = array();
 		$newschema = array();
 		$current = DB::getConn()->currentDatabase();
-		foreach(DB::getConn()->tableList() as $lowercase => $dbtablename) $oldschema[$lowercase] = DB::getConn()->fieldList($dbtablename);
+		foreach(DB::getConn()->tableList() as $lowercase => $dbtablename) $oldschema[$dbtablename] = DB::getConn()->fieldList($dbtablename);
 
 		DB::getConn()->selectDatabase('tmpdb');
 		$test = new SapphireTest();
@@ -111,13 +111,13 @@ class DBP_Database extends ViewableData {
 		
 		$artefacts = array();
 		foreach($oldschema as $table => $fields) {
-			if(!isset($newschema[$table])) {
+			if(!isset($newschema[strtolower($table)])) {
 				$artefacts[$table] = $table;
 				continue;
 			}
 			
 			foreach($fields as $field => $spec) {
-				if(!isset($newschema[$table][$field])) {
+				if(!isset($newschema[strtolower($table)][$field])) {
 					$artefacts[$table][$field] = $field;
 				}
 			}
