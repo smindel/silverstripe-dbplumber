@@ -1,8 +1,8 @@
 <?php
 
-class CleanUpSchemaTask extends BuildTask {
+class RemoveArtefactsTask extends BuildTask {
 
-	protected $title = 'Clean Up Database Schema';
+	protected $title = 'Remove Database Artefacts';
 	
 	protected $description = 'During devolpment of your Silverstripe application you may have deleted a data object class or removed a field from a data object. This leaves obsolete columns and tables in your databse behind. Because these columns or tables may contain data that must not be deleted sapphire doesn\'t delete those automatically. But if you know what you are doing and you are sure that these remains are no longer required, you can run this task to delete them. This is irreversible.';
 	

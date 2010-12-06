@@ -3,7 +3,7 @@
 class DBP_SQLDialect {
 
 	static function get() {
-		if(DB::getConn() instanceof MySQL3Databse) {
+		if(DB::getConn() instanceof MySQLDatabase) {
 			return new DBP_MySQL_Dialect();
 		} else if(DB::getConn() instanceof SQLite3Database) {
 			return new DBP_SQLite3_Dialect();
@@ -19,7 +19,7 @@ class DBP_SQLDialect {
 	}
 
 	function dropColumns($table, $columns) {
-		DB::query("ALTER TABLE \"$table\" DROP \"" . implode('", "', $columns) . "\"");
+		DB::query("ALTER TABLE \"$table\" DROP \"" . implode('", DROP "', $columns) . "\"");
 	}
 }
 

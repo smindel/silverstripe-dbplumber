@@ -228,7 +228,7 @@ class DBP_Database_Controller extends DBP_Controller {
 		if(empty($artefacts)) {
 			echo "The database does not contain obsolete tables or columns.";
 		} else {
-			echo "These tables / columns are obsolete: (<a href='dev/tasks/CleanUpSchemaTask'>CleanUpSchemaTask</a>)";
+			echo "These tables / columns are obsolete: (<a href='dev/tasks/RemoveArtefactsTask'>CleanUpSchemaTask</a>)";
 			echo '<ul>';
 			foreach($artefacts as $table => $drop) {
 				if(is_array($drop)) {
