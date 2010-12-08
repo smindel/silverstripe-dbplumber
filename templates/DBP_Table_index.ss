@@ -1,7 +1,7 @@
 			<% if Records %>
 				<% if Pagination.total %>
 					<p class='table-tools'>
-						Showing records $Pagination.start - $Pagination.end ($Pagination.total total)
+						Showing records $Pagination.start - $Pagination.end ($Pagination.total total) 
 
 						<% if Records.MoreThanOnePage %>
 							<% if Records.PrevLink %>
@@ -16,6 +16,21 @@
 						<% end_if %>
 
 						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only crud-records delete-records" disabled="disabled"><span><a href='{$DBPLink}record/delete'>delete</a></span></button>
+						
+						<div class="ui-state-highlight ui-corner-all" style="width:170px; padding-left:5px;">
+							<p>
+								<span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-info"></span>
+								<a href="browsehelp" class="DBP_HELPER"><strong>HOWTO:</strong> Browse</a>
+							</p>
+						</div>
+						<div id="browsehelp" class='DBP_HELP' title='andy'>
+							<h3>HOWTO browse</h3>
+							<p>Double click on record for editing.</p>
+							<p>Single click on record to select it for deletion.</p>
+							<p>Sort table by clicking on the column name.</p>
+							<p>Click again to toggle sorting direction.</p>
+							<p>Drag column seperator in the table head to change column widths.</p>
+						</div>
 					</p>
 				<% end_if %>
 				<form action="#">

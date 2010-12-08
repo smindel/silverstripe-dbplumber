@@ -67,6 +67,21 @@ function msgbx(text,status) {
 		});
 		
 		setSizes();
+
+		// user help
+		$(".DBP_HELP").dialog({
+			modal: true,
+			autoOpen: false,
+			resizable: false,
+			draggable: false,
+			width: 500,
+			title: 'HOWTO',
+			buttons: {
+				Ok: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
 	}
 	
 	// set the proper sizes for tabs and table list
@@ -218,19 +233,6 @@ function msgbx(text,status) {
 
 
 		// user help
-		$(".DBP_HELP").dialog({
-			modal: true,
-			autoOpen: false,
-			resizable: false,
-			draggable: false,
-			width: 500,
-			title: 'HOWTO',
-			buttons: {
-				Ok: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
 		$(".DBP_HELPER").live('click', function(){
 			$('#' + $(this).attr('href')).dialog("open");
 			return false;

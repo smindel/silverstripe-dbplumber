@@ -69,6 +69,7 @@ class DatabaseBrowser extends LeftAndMain {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.button.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.position.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.dialog.js');
+		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery.ui.draggable.js');
 
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.core.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/base/jquery.ui.dialog.css');
