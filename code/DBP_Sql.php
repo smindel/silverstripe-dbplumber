@@ -47,6 +47,9 @@ class DBP_Sql {
 	}
 
 	static function execute_script($queries) {
+
+		@ini_set('max_execution_time', '0');
+
 		$queries = DBP_Sql::split_script($queries);
 		switch(count($queries)) {
 			case 0: return array();

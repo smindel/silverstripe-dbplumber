@@ -141,6 +141,8 @@ class DBP_Database_Controller extends DBP_Controller {
 	function export($request) {
 		$dialect = $request->postVar('SqlDialect');
 		
+		@ini_set('max_execution_time', '0');
+		
 		if($dialect == 'MSSQL' && !method_exists(DB::getConn(), "getIdentityColumn")) return "DB PLUMBER ERROR: method MSSQLDatabase::getIdentityColumn() does not exist. Update your mssql module.";
 		
 		switch($request->postVar('exporttype')) {
