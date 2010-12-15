@@ -169,8 +169,7 @@ class DBP_Database_Controller extends DBP_Controller {
 			"   =============================================",
 			'*/', ''
 		);
-		if($dialect == 'MySQL') $commands[] = "SET sql_mode = 'ANSI,NO_BACKSLASH_ESCAPES';";
-		if(DB::getConn() instanceof MySQLDatabase) DB::query("SET sql_mode = 'ANSI,NO_BACKSLASH_ESCAPES'");
+		if($dialect == 'MySQL') $commands[] = "SET sql_mode = 'ANSI';";
 		
 		foreach($tables as $table) {
 			$fields = array();
@@ -181,8 +180,11 @@ class DBP_Database_Controller extends DBP_Controller {
 				$cells = array();
 			
 				foreach($record as $cell) {
-					if(is_null($cell)) $cell = 'NULL';
-					else if(is_string($cell)) $cell = "'" . str_replace('\'', '\'\'', $cell) . "'";
+					if(is_null($cell)) {
+						$cell = 'NULL';
+					} else if(is_string($cell)) {
+						$cell = "'" . str_replace('\'', '\'\'', $cell) . "'";
+					}
 					$cells[] = $cell;
 				}
 				$commands[] = 
@@ -194,9 +196,6 @@ class DBP_Database_Controller extends DBP_Controller {
 			}
 			if($dialect == 'MSSQL' && $idcol) $commands[] = "SET IDENTITY_INSERT \"$table\" OFF;";
 		}
-
-		if($dialect == 'MySQL') $commands[] = "SET sql_mode = 'ANSI';";
-		if(DB::getConn() instanceof MySQLDatabase) DB::query("SET sql_mode = 'ANSI'");
 
 		return $commands;
 	}
