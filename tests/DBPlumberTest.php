@@ -165,13 +165,13 @@ class DBPlumberTest extends FunctionalTest {
 				'MySQL' => "\\\\",
 				'SQLite' => "\\",
 				'MSSQL' => "\\",
-				'Postgres' => "\\",
+				'Postgres' => "\\\\",
 			),
 			"\\'" => array(
 				'MySQL' => "\\\\\'",
 				'SQLite' => "\\''",
 				'MSSQL' => "\\''",
-				'Postgres' => "\\''",
+				'Postgres' => "\\\\''",
 			),
 			"<a></a>" => array(
 				'MySQL' => '<a></a>',
@@ -190,7 +190,7 @@ class DBPlumberTest extends FunctionalTest {
 				if($dialect != 'MSSQL' || DB::getConn() instanceof MSSQLDatabase) {
 					$dump = $dbp->backup(array('DBPlumberTest_Object'), $dialect);
 					foreach($dump as $line) if(substr($line, 0, 6) == 'INSERT') $insert = $line;
-					$this->assertTrue((bool)strpos($insert, 'START_TOKEN' . $converted[$dialect] . 'END_TOKEN'), print_r($raw, true) . ' has been properly converted from ' . get_class(DB::getConn()) . ' to a ' . $dialect . ' INSERT');
+					$this->assertTrue((bool)strpos($insert, 'START_TOKEN' . $converted[$dialect] . 'END_TOKEN'), print_r($raw, true) . ' has been properly converted from ' . get_class(DB::getConn()) . ' to a ' . $dialect . ' INSERT: ' . $insert);
 
 					if(DB::getConn() instanceof $class && preg_match('/START_TOKEN.*END_TOKEN/', $insert, $matches)) $import = $matches[0];
 				}

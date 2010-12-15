@@ -37,9 +37,19 @@ class DBP_MySQL_Dialect extends DBP_SQLDialect {
 	}
 }
 
-class DBP_MSSQL_Dialect extends DBP_SQLDialect {}
+class DBP_MSSQL_Dialect extends DBP_SQLDialect {
+	function escape($string) {
+    	$string=str_replace("'","''",$string);
+    	$string=str_replace("\0","[NULL]",$string);
+    	return $string;
+	}
+}
 
-class DBP_Postgres_Dialect extends DBP_SQLDialect {}
+class DBP_Postgres_Dialect extends DBP_SQLDialect {
+	function escape($string) {
+		return pg_escape_string($string);
+	}
+}
 
 class DBP_SQLite_Dialect extends DBP_SQLDialect {
 

@@ -183,7 +183,7 @@ class DBP_Database_Controller extends DBP_Controller {
 					if(is_null($cell)) {
 						$cell = 'NULL';
 					} else if(is_string($cell)) {
-						$cell = DBP_SQLDialect::get($dialect)->escape($cell);
+						$cell = "'" . DBP_SQLDialect::get($dialect)->escape($cell) . "'";
 					}
 					$cells[] = $cell;
 				}
