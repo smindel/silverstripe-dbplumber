@@ -179,6 +179,18 @@ class DBPlumberTest extends FunctionalTest {
 				'MSSQL' => '<a></a>',
 				'Postgres' => '<a></a>',
 			),
+			"`~!@#$%^&*()_-+{}[]|/?,." => array(
+				'MySQL' => '`~!@#$%^&*()_-+{}[]|/?,.',
+				'SQLite' => '`~!@#$%^&*()_-+{}[]|/?,.',
+				'MSSQL' => '`~!@#$%^&*()_-+{}[]|/?,.',
+				'Postgres' => '`~!@#$%^&*()_-+{}[]|/?,.',
+			),
+			"äöüÄÖÜß" => array(
+				'MySQL' => 'äöüÄÖÜß',
+				'SQLite' => 'äöüÄÖÜß',
+				'MSSQL' => 'äöüÄÖÜß',
+				'Postgres' => 'äöüÄÖÜß',
+			),
 		);
 		
 		foreach($specialchars as $raw => $converted) {
