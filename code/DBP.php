@@ -8,7 +8,7 @@ class DBP {
 	
 	public static $adapters = array(
 		'MySQLDatabase' => 'MySQL',
-		'SQLiteDatabase' => 'SQLite',
+		'SQLite3Database' => 'SQLite',
 		'MSSQLDatabase' => 'MSSQL',
 		'PostgreSQLDatabase' => 'Postgres',
 	);

@@ -143,34 +143,63 @@ class DBPlumberTest extends FunctionalTest {
 		$dbp = new DBP_Database_Controller();
 		
 		$specialchars = array(
-			'TEST' => 'TEST',
-			'\'' => '\'\'',
-			'"' => '"',
-			"\\" => "\\",
-			"\\'" => "\\''",
-			"<a></a>" => "<a></a>",
+			'TEST' => array(
+				'MySQL' => 'TEST',
+				'SQLite' => 'TEST',
+				'MSSQL' => 'TEST',
+				'Postgres' => 'TEST',
+			),
+			'\'' => array(
+				'MySQL' => '\\\'',
+				'SQLite' => "''",
+				'MSSQL' => "''",
+				'Postgres' => "''",
+			),
+			'"' => array(
+				'MySQL' => '\"',
+				'SQLite' => '"',
+				'MSSQL' => '"',
+				'Postgres' => '"',
+			),
+			"\\" => array(
+				'MySQL' => "\\\\",
+				'SQLite' => "\\",
+				'MSSQL' => "\\",
+				'Postgres' => "\\",
+			),
+			"\\'" => array(
+				'MySQL' => "\\\\\'",
+				'SQLite' => "\\''",
+				'MSSQL' => "\\''",
+				'Postgres' => "\\''",
+			),
+			"<a></a>" => array(
+				'MySQL' => '<a></a>',
+				'SQLite' => '<a></a>',
+				'MSSQL' => '<a></a>',
+				'Postgres' => '<a></a>',
+			),
 		);
 		
-		foreach($specialchars as $raw => $conv) {
+		foreach($specialchars as $raw => $converted) {
 
 			$obj->SpecialChar = 'START_TOKEN' . $raw . 'END_TOKEN';
 			$obj->write();
 
-			foreach(DBP::$adapters as $dialect) {
+			foreach(DBP::$adapters as $class => $dialect) {
 				if($dialect != 'MSSQL' || DB::getConn() instanceof MSSQLDatabase) {
 					$dump = $dbp->backup(array('DBPlumberTest_Object'), $dialect);
 					foreach($dump as $line) if(substr($line, 0, 6) == 'INSERT') $insert = $line;
-					Debug::show($dialect, 'START_TOKEN' . $conv . 'END_TOKEN', $insert, strpos($insert, 'START_TOKEN' . $conv . 'END_TOKEN'));
-					$this->assertTrue((bool)strpos($insert, 'START_TOKEN' . $conv . 'END_TOKEN'), print_r($raw, true) . ' has been properly converted from ' . get_class(DB::getConn()) . ' to a ' . $dialect . ' INSERT');
+					$this->assertTrue((bool)strpos($insert, 'START_TOKEN' . $converted[$dialect] . 'END_TOKEN'), print_r($raw, true) . ' has been properly converted from ' . get_class(DB::getConn()) . ' to a ' . $dialect . ' INSERT');
 
-					if(preg_match('/START_TOKEN.*END_TOKEN/', $insert, $matches)) $import = $matches[0];
+					if(DB::getConn() instanceof $class && preg_match('/START_TOKEN.*END_TOKEN/', $insert, $matches)) $import = $matches[0];
 				}
 			}
 
-			if($import) {
+			if(!empty($import)) {
 				DB::query("UPDATE \"DBPlumberTest_Object\" SET \"SpecialChar\" = '$import:NEW' WHERE \"ID\" = " . $obj->ID);
 				$obj = DataObject::get_by_id('DBPlumberTest_Object', $obj->ID);
-				Debug::show('IMPORT', $obj->SpecialChar);
+				$this->assertEquals('START_TOKEN' . $raw . 'END_TOKEN:NEW', $obj->SpecialChar, print_r($raw, true) . ' has been properly restored for ' . get_class(DB::getConn()));
 			}
 		}
 	}
