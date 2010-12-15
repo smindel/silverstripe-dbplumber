@@ -6,6 +6,13 @@ class DBP {
 
 	public static $records_per_page = 10;
 	
+	public static $adapters = array(
+		'MySQLDatabase' => 'MySQL',
+		'SQLiteDatabase' => 'SQLite',
+		'MSSQLDatabase' => 'MSSQL',
+		'PostgreSQLDatabase' => 'Postgres',
+	);
+	
 	static function select($column, $table, $filter = null, $order = null, $limit = null, $offset = null) {
 		switch(DB::getConn()->getDatabaseServer()) {
 			case 'mssql':

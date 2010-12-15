@@ -4,6 +4,10 @@ class DBPlumberTest extends FunctionalTest {
 	
 	static $fixture_file = 'sapphire/tests/SiteTreeTest.yml';
 	
+	protected $extraDataObjects = array(
+		'DBPlumberTest_Object',
+	);
+
 	function setUp() {
 		parent::setUp();
 	}
@@ -113,7 +117,6 @@ class DBPlumberTest extends FunctionalTest {
 		
 	}
 
-	
 	function testExecuteScriptWithRollback() {
 		
 		// skip if adapter doesn't support transactions
@@ -133,4 +136,42 @@ class DBPlumberTest extends FunctionalTest {
 		$this->assertEquals(0, DB::query("SELECT COUNT(*) FROM \"SiteTree\" WHERE \"Title\" = 'DBPRollbackTest'")->Value(), 'Make sure the transaction really got rolled back');
 		
 	}
+
+	function testExportingSpecialChars() {
+
+		$obj = new DBPlumberTest_Object();
+		$dbp = new DBP_Database_Controller();
+		
+		$specialchars = array(
+			'TEST' => 'TEST',
+			'\'' => '\'\'',
+			'"' => '"',
+			"\\" => "\\",
+		);
+		
+		foreach($specialchars as $raw => $conv) {
+
+			$obj->SpecialChar = 'START_TOKEN' . $raw . 'END_TOKEN';
+			$obj->write();
+
+
+			foreach(DBP::$adapters as $dialect) {
+				if($dialect == 'MySQL') continue;
+				if($dialect != 'MSSQL' || DB::getConn() instanceof MSSQLDatabase) {
+					$dump = $dbp->backup(array('DBPlumberTest_Object'), $dialect);
+					foreach($dump as $line) if(substr($line, 0, 6) == 'INSERT') $insert = $line;
+					aDebug($dialect, '/START_TOKEN' . $conv . 'END_TOKEN/', $insert);
+					$this->assertTrue((bool)preg_match('/START_TOKEN' . $conv . 'END_TOKEN/', $insert), print_r($raw, true) . ' has been properly converted from ' . get_class(DB::getConn()) . ' to a ' . $dialect . ' INSERT');
+				}
+			}
+		}
+	}
+}
+
+class DBPlumberTest_Object extends DataObject {
+
+	static $db = array(
+		'SpecialChar' => 'Text',
+	);
+
 }

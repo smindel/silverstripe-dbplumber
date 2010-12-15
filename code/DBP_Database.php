@@ -19,14 +19,8 @@ class DBP_Database extends ViewableData {
 	}
 
 	function Adapters() {
-		$names = array(
-			'MySQL',
-			'SQLite',
-			'MSSQL',
-			'Postgres',
-		);
 		$adapters = new DataObjectSet();
-		foreach($names as $name) $adapters->push(new ArrayData(array('Name' => $name, 'Available' => (bool)(DB::getConn() instanceof MSSQLDatabase || $name != 'MSSQL'), 'Selected' => (bool)preg_match('/^' . $name . '/i', get_class(DB::getConn())))));
+		foreach(DBP::$adapters as $name) $adapters->push(new ArrayData(array('Name' => $name, 'Available' => (bool)(DB::getConn() instanceof MSSQLDatabase || $name != 'MSSQL'), 'Selected' => (bool)preg_match('/^' . $name . '/i', get_class(DB::getConn())))));
 		return $adapters;
 	}
 
@@ -175,7 +169,9 @@ class DBP_Database_Controller extends DBP_Controller {
 			"   =============================================",
 			'*/', ''
 		);
-		if($dialect == 'MySQL') $commands[] = "SET sql_mode = 'ANSI';";
+		if($dialect == 'MySQL') $commands[] = "SET sql_mode = 'ANSI,NO_BACKSLASH_ESCAPES';";
+		if(DB::getConn() instanceof MySQLDatabase) DB::query("SET sql_mode = 'ANSI,NO_BACKSLASH_ESCAPES'");
+		
 		foreach($tables as $table) {
 			$fields = array();
 			if($dialect == 'MSSQL' && ($idcol = DB::getConn()->getIdentityColumn($table))) $commands[] = "SET IDENTITY_INSERT \"$table\" ON;";
@@ -186,7 +182,7 @@ class DBP_Database_Controller extends DBP_Controller {
 			
 				foreach($record as $cell) {
 					if(is_null($cell)) $cell = 'NULL';
-					else if(is_string($cell)) $cell = "'" . str_replace("'", "''", $cell) . "'";
+					else if(is_string($cell)) $cell = "'" . str_replace('\'', '\'\'', $cell) . "'";
 					$cells[] = $cell;
 				}
 				$commands[] = 
@@ -198,6 +194,10 @@ class DBP_Database_Controller extends DBP_Controller {
 			}
 			if($dialect == 'MSSQL' && $idcol) $commands[] = "SET IDENTITY_INSERT \"$table\" OFF;";
 		}
+
+		if($dialect == 'MySQL') $commands[] = "SET sql_mode = 'ANSI';";
+		if(DB::getConn() instanceof MySQLDatabase) DB::query("SET sql_mode = 'ANSI'");
+
 		return $commands;
 	}
 	
