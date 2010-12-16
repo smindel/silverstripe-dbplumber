@@ -140,7 +140,7 @@ class DBP_Sql {
 				if($char == "'") $scope = 'literal';
 			} else if($scope == 'identifier' && $char == '"') {
 				$scope = 'root';
-			} else if($scope == 'literal' && $char == "'" && substr($output[$index],-1) != "\\") {
+			} else if($scope == 'literal' && $char == "'" && (!(DB::getConn() instanceof MySQLDatabase) || substr($output[$index],-1) != "\\")) {
 				$scope = 'root';
 			} else if($scope == 'bracket' && $char == ")") {
 				$scope = 'root';
