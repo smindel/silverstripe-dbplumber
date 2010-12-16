@@ -191,12 +191,20 @@ class DBPlumberTest extends FunctionalTest {
 				'MSSQL' => 'äöüÄÖÜß',
 				'Postgres' => 'äöüÄÖÜß',
 			),
+			"<param name=\"src\" value=\"http://www.someurl.com/v/xVRmOg5Y0i4w?fs=1&\nhl=en_US&\nrel=0\"/>" => array(
+				'MySQL' => "<param name=\\\"src\\\" value=\\\"http://www.someurl.com/v/xVRmOg5Y0i4w?fs=1&\nhl=en_US&\nrel=0\\\"/>",
+				'SQLite' => "<param name=\"src\" value=\"http://www.someurl.com/v/xVRmOg5Y0i4w?fs=1&\nhl=en_US&\nrel=0\"/>",
+				'MSSQL' => "<param name=\"src\" value=\"http://www.someurl.com/v/xVRmOg5Y0i4w?fs=1&\nhl=en_US&\nrel=0\"/>",
+				'Postgres' => "<param name=\"src\" value=\"http://www.someurl.com/v/xVRmOg5Y0i4w?fs=1&\nhl=en_US&\nrel=0\"/>",
+			),
 		);
 		
 		foreach($specialchars as $raw => $converted) {
 
 			$obj->SpecialChar = 'START_TOKEN' . $raw . 'END_TOKEN';
 			$obj->write();
+			
+			$import = '';
 
 			foreach(DBP::$adapters as $class => $dialect) {
 				if($dialect != 'MSSQL' || DB::getConn() instanceof MSSQLDatabase) {
@@ -204,9 +212,11 @@ class DBPlumberTest extends FunctionalTest {
 					foreach($dump as $line) if(substr($line, 0, 6) == 'INSERT') $insert = $line;
 					$this->assertTrue((bool)strpos($insert, 'START_TOKEN' . $converted[$dialect] . 'END_TOKEN'), print_r($raw, true) . ' has been properly converted from ' . get_class(DB::getConn()) . ' to a ' . $dialect . ' INSERT: ' . $insert);
 
-					if(DB::getConn() instanceof $class && preg_match('/START_TOKEN.*END_TOKEN/', $insert, $matches)) $import = $matches[0];
+					if(DB::getConn() instanceof $class && preg_match('/START_TOKEN.*END_TOKEN/s', $insert, $matches)) $import = $matches[0];
 				}
 			}
+
+			$this->assertFalse(empty($import), 'Insert for ' . get_class(DB::getConn()) . ' contains tokens for string ' . print_r($raw, true));
 
 			if(!empty($import)) {
 				DB::query("UPDATE \"DBPlumberTest_Object\" SET \"SpecialChar\" = '$import:NEW' WHERE \"ID\" = " . $obj->ID);
