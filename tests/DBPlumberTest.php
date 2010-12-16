@@ -34,6 +34,10 @@ class DBPlumberTest extends FunctionalTest {
 		$this->assertEquals("SELECT", substr($commands[0],0,6), 'Don\'t split on ; when inside quotes');
 		$this->assertEquals("INSERT", substr($commands[1],0,6), 'Don\'t split if command is inside quotes');
 		
+		$specialcharacters = DBP_SQLDialect::get()->escape("\\';");
+		$script = "SELECT * FROM \"SiteTree\" WHERE \"Content\" LIKE 'Some text $specialcharacters and some more'";
+		$commands = DBP_Sql::split_script($script);
+		$this->assertEquals(1, count($commands), 'Return only 1 commands');
 	}
 	
 	function testExecute() {
