@@ -13,7 +13,7 @@ class DatabaseBrowser extends LeftAndMain {
 	static $managed_models = array('database', 'table', 'record');
 
 	static $menu_title = 'DB Plumber';
-	
+
 	static $allowed_actions = array(
 		'show' => 'ADMIN',
 		'delete' => 'ADMIN',
@@ -39,6 +39,10 @@ class DatabaseBrowser extends LeftAndMain {
 	// expose config in info tab, password will always be omitted
 	static $expose_config = true;
 	
+	public static $truncate_text_longer = 50;
+
+	public static $records_per_page = 10;
+
 	function canView() {
 		if(self::$trusted_envs && !in_array(Director::get_environment_type(), self::$trusted_envs)) return false;
 		if(self::$trusted_ips && !in_array($_SERVER['REMOTE_ADDR'], self::$trusted_ips)) return false;

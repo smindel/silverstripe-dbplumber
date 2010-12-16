@@ -210,7 +210,7 @@ class DBPlumberTest extends FunctionalTest {
 			
 			$import = '';
 
-			foreach(DBP::$adapters as $class => $dialect) {
+			foreach(DBP_SQLDialect::$adapters as $class => $dialect) {
 				if($dialect != 'MSSQL' || DB::getConn() instanceof MSSQLDatabase) {
 					$dump = $dbp->backup(array('DBPlumberTest_Object'), $dialect);
 					foreach($dump as $line) if(substr($line, 0, 6) == 'INSERT') $insert = $line;

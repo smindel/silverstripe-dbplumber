@@ -53,10 +53,10 @@ class DBP_Table extends ViewableData {
 		$rows = new DataObjectSet();
 		$order = isset($vars['orderby']) && $vars['orderby'] ? "\"{$vars['orderby']}\" " . $vars['orderdir'] : '';
 		
-		$records = DBP_Record::get($this->Name, $order, DBP::$records_per_page, $start);
+		$records = DBP_Record::get($this->Name, $order, DatabaseBrowser::$records_per_page, $start);
 		$num = DB::query('SELECT COUNT(*) FROM "' . $this->Name . '"')->value();
 
-		$records->setPageLimits($start, DBP::$records_per_page, $num);
+		$records->setPageLimits($start, DatabaseBrowser::$records_per_page, $num);
 
 		return $records;
 	}
@@ -64,19 +64,19 @@ class DBP_Table extends ViewableData {
 	function Pagination() {
 
 		$start = (Int)$this->requestVar('start');
-		$total = DB::query(DBP::select('COUNT(*)', $this->Name))->value();
-		$end = $start + DBP::$records_per_page - 1 > $total - 1 ? $total - 1 : $start + DBP::$records_per_page - 1;
+		$total = DB::query(DBP_SQLDialect::select('COUNT(*)', $this->Name))->value();
+		$end = $start + DatabaseBrowser::$records_per_page - 1 > $total - 1 ? $total - 1 : $start + DatabaseBrowser::$records_per_page - 1;
 		$pagination = array(
 			'total' => $total, 
 			'start' => $start, 
-			'length' => DBP::$records_per_page,
+			'length' => DatabaseBrowser::$records_per_page,
 			'end' => $end,
 			'orderby' => $this->requestVar('orderby'),
 			'orderdir' => $this->requestVar('orderdir'),
 		);
-		if($start > 0) { $pagination['firstlink'] = 'start=0'; $pagination['prevlink'] = 'start=' . ($start - DBP::$records_per_page); }
+		if($start > 0) { $pagination['firstlink'] = 'start=0'; $pagination['prevlink'] = 'start=' . ($start - DatabaseBrowser::$records_per_page); }
 		if(isset($pagination['prevlink']) && $pagination['prevlink'] < 0) $pagination['prevlink'] = 'start=0'; 
-		if($start + DBP::$records_per_page < $pagination['total']) { $pagination['nextlink'] = 'start=' . ($start + DBP::$records_per_page); $pagination['lastlink'] = 'start=' . (floor(($pagination['total'] - 1) / DBP::$records_per_page) * DBP::$records_per_page); }
+		if($start + DatabaseBrowser::$records_per_page < $pagination['total']) { $pagination['nextlink'] = 'start=' . ($start + DatabaseBrowser::$records_per_page); $pagination['lastlink'] = 'start=' . (floor(($pagination['total'] - 1) / DatabaseBrowser::$records_per_page) * DatabaseBrowser::$records_per_page); }
 		return new ArrayData($pagination);
 	}
 

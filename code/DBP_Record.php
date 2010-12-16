@@ -27,7 +27,7 @@ class DBP_Record extends ViewableData {
 		$cells = new DataObjectSet();
 		foreach($this->data as $f => $v) {
 			$escaped = htmlentities($v,ENT_COMPAT, 'UTF-8');
-			$truncate = strlen($escaped) > 64 ? substr($escaped,0,63) . '<span class="truncated">&hellip;</span>' : $escaped;
+			$truncate = strlen($escaped) > DatabaseBrowser::$truncate_text_longer ? substr($escaped, 0, DatabaseBrowser::$truncate_text_longer - 1) . '<span class="truncated">&hellip;</span>' : $escaped;
 			$field = new DBP_Field($this->table . '.' . $f);
 			if($field->datatype() != "__HIDE__") {
 				$cells->push(
@@ -83,7 +83,7 @@ class DBP_Record extends ViewableData {
 	
 	static function get($table, $order, $limit, $start) {
 		$return = new DataObjectSet();
-		$result = DB::query(DBP::select('*', $table, null, $order, $limit, $start));
+		$result = DB::query(DBP_SQLDialect::select('*', $table, null, $order, $limit, $start));
 		foreach($result as $r) {
 			$rec = new DBP_Record();
 			$rec->id = $r['ID'];

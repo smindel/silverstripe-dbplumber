@@ -20,7 +20,7 @@ class DBP_Database extends ViewableData {
 
 	function Adapters() {
 		$adapters = new DataObjectSet();
-		foreach(DBP::$adapters as $name) $adapters->push(new ArrayData(array('Name' => $name, 'Available' => (bool)(DB::getConn() instanceof MSSQLDatabase || $name != 'MSSQL'), 'Selected' => (bool)preg_match('/^' . $name . '/i', get_class(DB::getConn())))));
+		foreach(DBP_SQLDialect::$adapters as $name) $adapters->push(new ArrayData(array('Name' => $name, 'Available' => (bool)(DB::getConn() instanceof MSSQLDatabase || $name != 'MSSQL'), 'Selected' => (bool)preg_match('/^' . $name . '/i', get_class(DB::getConn())))));
 		return $adapters;
 	}
 
