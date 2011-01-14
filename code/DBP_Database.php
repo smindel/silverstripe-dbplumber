@@ -85,7 +85,10 @@ class DBP_Database extends ViewableData {
 			if(!$val) continue;
 			if($key == "password") $val = "*****";
 			$key = ucfirst($key);
-			$config->push(new ArrayData(array('key' => $key, 'val' => $val)));
+			$config->push(new ArrayData(array(
+				'key' => _t('DBP_Database.DB_CONFIG_' . strtoupper($key), $key),
+				'val' => $val,
+			)));
 		}
 		return $config;
 	}
@@ -152,6 +155,23 @@ class DBP_Database_Controller extends DBP_Controller {
 				header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) . '_' . $dialect .  '.sql.gz"');
 				echo $commands;
 				break;
+			case 'openoffice':
+				// http://www.ibm.com/developerworks/web/library/wa-odf/index.html?ca=drs-#list10
+				include('../dbplumber/thirdparty/ods-php-0.1rc1/ods.php'); //include the class and wrappers
+				$object = newOds(); //create a new ods file
+				$object->addCell(0,0,0,1,'float'); //add a cell to sheet 0, row 0, cell 0, with value 1 and type float
+				$object->addCell(0,0,1,2,'float'); //add a cell to sheet 0, row 0, cell 1, with value 1 and type float
+				$object->addCell(0,1,0,1,'float'); //add a cell to sheet 0, row 1, cell 0, with value 1 and type float
+				$object->addCell(0,1,1,2,'float'); //add a cell to sheet 0, row 1, cell 1, with value 1 and type float
+				$object->addCell('SiteTree',0,0,1,'float'); //add a cell to sheet 0, row 0, cell 0, with value 1 and type float
+				$object->addCell('SiteTree',0,1,2,'float'); //add a cell to sheet 0, row 0, cell 1, with value 1 and type float
+				$object->addCell('SiteTree',1,0,1,'float'); //add a cell to sheet 0, row 1, cell 0, with value 1 and type float
+				$object->addCell('SiteTree',1,1,2,'float'); //add a cell to sheet 0, row 1, cell 1, with value 1 and type float
+				saveOds($object, TEMP_FOLDER . '/new.ods'); //save the object to a ods file
+				header("Content-type: gzip; charset=utf-8");
+				header('Content-Disposition: attachment; filename="' . $this->instance->Name() . '_' . date('Ymd_His', time()) .  '.ods"');
+				echo file_get_contents(TEMP_FOLDER . '/new.ods');
+				unlink(TEMP_FOLDER . '/new.ods');
 		}
 	}
 
@@ -227,15 +247,15 @@ class DBP_Database_Controller extends DBP_Controller {
 	function showartefact() {
 		$artefacts = $this->instance->Artefacts();
 		if(empty($artefacts)) {
-			echo "The database does not contain obsolete tables or columns.";
+			echo _t("DBP_Database.NOARTEFACTSMSG", "The database does not contain obsolete tables or columns.");
 		} else {
-			echo "These tables / columns are obsolete: (<a href='dev/tasks/RemoveArtefactsTask'>CleanUpSchemaTask</a>)";
+			echo _t("DBP_Database.ARTEFACTSMSG", "These tables / columns are obsolete:") . " (<a href='dev/tasks/RemoveArtefactsTask'>" . _t("DBP_Database.ARTEFACTSTASK", "CleanUpSchemaTask") . "</a>)";
 			echo '<ul>';
 			foreach($artefacts as $table => $drop) {
 				if(is_array($drop)) {
-					echo "<li>column {$table}." . implode("</li><li>column {$table}.", $drop) . "</li>";
+					echo "<li>" . _t("DBP_Database.ARTEFACTS_COLUMN", "Column") . " {$table}." . implode("</li><li>" . _t("DBP_Database.ARTEFACTS_COLUMN", "Column") . " {$table}.", $drop) . "</li>";
 				} else {
-					echo "<li>table $table</li>";
+					echo "<li>" . _t("DBP_Database.ARTEFACTS_TABLE", "Table") . " $table</li>";
 				}
 			}
 			echo '</ul>';

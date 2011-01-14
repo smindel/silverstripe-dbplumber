@@ -82,6 +82,8 @@ class DatabaseBrowser extends LeftAndMain {
 		
 		Requirements::clear('jsparty/prototype.js');
 
+		Requirements::javascript(SAPPHIRE_DIR . "/javascript/i18n.js");
+		Requirements::add_i18n_javascript('dbplumber/javascript/lang');
 		Requirements::javascript("dbplumber/javascript/DatabaseBrowser.js");
 		Requirements::javascript("dbplumber/thirdparty/jquery.event.drag-1.4.js");
 		Requirements::javascript("dbplumber/thirdparty/jquery.kiketable.colsizable-1.1.js");

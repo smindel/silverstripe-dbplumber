@@ -1,7 +1,7 @@
 			<% if Records %>
 				<% if Pagination.total %>
 					<p class='table-tools'>
-						Showing records $Pagination.start - $Pagination.end ($Pagination.total total) 
+						<% _t('SHOWING_RECORDS', 'Showing records') %> $Pagination.start - $Pagination.end ($Pagination.total <% _t('TOTAL', 'total') %>) 
 
 						<% if Records.MoreThanOnePage %>
 							<% if Records.PrevLink %>
@@ -20,16 +20,16 @@
 						<div class="ui-state-highlight ui-corner-all" style="width:170px; padding-left:5px;">
 							<p>
 								<span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-info"></span>
-								<a href="browsehelp" class="DBP_HELPER"><strong>HOWTO:</strong> Browse</a>
+								<a href="browsehelp" class="DBP_HELPER"><strong><% _t('HOWTO', 'HOWTO') %>:</strong> <% _t('BROWSE', 'Browse') %></a>
 							</p>
 						</div>
 						<div id="browsehelp" class='DBP_HELP' title='andy'>
-							<h3>HOWTO browse</h3>
-							<p>Double click on record for editing.</p>
-							<p>Single click on record to select it for deletion.</p>
-							<p>Sort table by clicking on the column name.</p>
-							<p>Click again to toggle sorting direction.</p>
-							<p>Drag column seperator in the table head to change column widths.</p>
+							<h3><% _t('HOWTO', 'HOWTO') %> <% _t('BROWSE', 'Browse') %></h3>
+							<p><% _t('HELP1', 'Double click on record for editing.') %></p>
+							<p><% _t('HELP2', 'Single click on record to select it for deletion.') %></p>
+							<p><% _t('HELP3', 'Sort table by clicking on the column name.') %></p>
+							<p><% _t('HELP4', 'Click again to toggle sorting direction.') %></p>
+							<p><% _t('HELP5', 'Drag column seperator in the table head to change column widths.') %></p>
 						</div>
 					</p>
 				<% end_if %>
@@ -69,5 +69,5 @@
 					</tbody>
 				</table>
 			<% else %>
-				<p>No records</p>
+				<p><% _t('NO_RECORDS', 'No records') %></p>
 			<% end_if %>

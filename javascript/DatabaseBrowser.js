@@ -32,17 +32,17 @@ function msgbx(text,status) {
 			select: function(e,u){
 				var tab = (u.tab + '').split('#');
 				if(tab[1] == 'empty-tab') {
-					if(!confirm('This action deletes all records in this table. Do you want to proceed?')) return false;
-					msgbx('empty table', 'waiting');
+					if(!confirm(ss.i18n._t('DBP_Table.EMPTY_TABLE_MSG', 'This action deletes all records in this table. Do you want to proceed?'))) return false;
+					msgbx(ss.i18n._t('DBP_Table.MSG_EMPTY_TABLE', 'empty table'), 'waiting');
 					$('#right div.main').load($('#empty_form').attr('action'), function(){
-						msgbx('done', 'good');
+						msgbx(ss.i18n._t('DBP_Table.MSG_DONE', 'done'), 'good');
 						initRight();
 					});
 				} else if(tab[1] == 'drop-tab') {
-					if(!confirm('This action deletes this table. Do you want to proceed?')) return false;
-					msgbx('drop table', 'waiting');
+					if(!confirm(ss.i18n._t('DBP_Table.DROP_TABLE_MSG', 'This action deletes this table. Do you want to proceed?'))) return false;
+					msgbx(ss.i18n._t('DBP_Table.MSG_DROP_TABLE', 'drop table'), 'waiting');
 					$('#right div.main').load($('#drop_form').attr('action'), function(){
-						msgbx('done', 'good');
+						msgbx(ss.i18n._t('DBP_Table.MSG_DONE', 'done'), 'good');
 						initRight();
 						document.location.href = document.location.href;
 					});
@@ -58,10 +58,10 @@ function msgbx(text,status) {
 			target: '#sql-tab',
 			success: function() { 
 				$("#tabs").tabs('select', 1);
-				msgbx('executed', 'good');
+				msgbx(ss.i18n._t('DBP_Table.MSG_EXECUTED', 'executed'), 'good');
 			},
 			beforeSubmit: function() { 
-				msgbx('uploading...', 'waiting');
+				msgbx(ss.i18n._t('DBP_Table.MSG_UPLOADING', 'uploading...'), 'waiting');
 			}
 			
 		});
@@ -69,18 +69,20 @@ function msgbx(text,status) {
 		setSizes();
 
 		// user help
-		$(".DBP_HELP").dialog({
-			modal: true,
-			autoOpen: false,
-			resizable: false,
-			draggable: false,
-			width: 500,
-			title: 'HOWTO',
-			buttons: {
-				Ok: function() {
-					$( this ).dialog( "close" );
+		$(".DBP_HELP").livequery(function(){
+			$(this).dialog({
+				modal: true,
+				autoOpen: false,
+				resizable: false,
+				draggable: false,
+				width: 500,
+				title: 'HOWTO',
+				buttons: {
+					Ok: function() {
+						$( this ).dialog( "close" );
+					}
 				}
-			}
+			});
 		});
 	}
 	
@@ -98,9 +100,9 @@ function msgbx(text,status) {
 		$('#dbb_table_list li').live('click', function() {
 			$('#dbb_table_list li').removeClass('selected');
 			$(this).addClass('selected');
-			msgbx('loading table ' + $(this).text(), 'waiting');
+			msgbx(ss.i18n._t('DBP_Table.MSG_LOADING_TABLE', 'loading table ') + $(this).text(), 'waiting');
 			$('#right div.main').load($('a', this).attr('href'), function(){
-				msgbx('loaded', 'good');
+				msgbx(ss.i18n._t('DBP_Table.MSG_LOADED', 'loaded'), 'good');
 				initRight();
 			});
 			return false;
@@ -109,9 +111,9 @@ function msgbx(text,status) {
 		// select the database on the left
 		$('#lefthead').live('click', function() {
 			$('#dbb_table_list li').removeClass('selected');
-			msgbx('loading database ' + $(this).text(), 'waiting');
+			msgbx(ss.i18n._t('DBP_Table.MSG_LOADING_DB', 'loading database ') + $(this).text(), 'waiting');
 			$('#right div.main').load($('a', this).attr('href'), function(){
-				msgbx('loaded', 'good');
+				msgbx(ss.i18n._t('DBP_Table.MSG_LOADED', 'loaded'), 'good');
 				initRight();
 			});
 			return false;
@@ -119,14 +121,14 @@ function msgbx(text,status) {
 
 		// submit a custom query on the right
 		$('#sql_form button').livequery('click', function() {
-			msgbx('execute statement', 'waiting');
+			msgbx(ss.i18n._t('DBP_Table.MSG_EXECUTE_STATEMENT', 'execute statement'), 'waiting');
 			$.post(
 				'admin/dbplumber/database/execute',
 				$('#sql_form').serialize(),
 				function(data){
 					$('#sql-tab').html(data);
 					$("#right table.kike").kiketable_colsizable(kikeoptions);
-				 	msgbx('executed', 'good');
+				 	msgbx(ss.i18n._t('DBP_Table.MSG_EXECUTED', 'executed'), 'good');
 				}
 			);
 			return false;
@@ -137,20 +139,20 @@ function msgbx(text,status) {
 
 		// paginate through the records of a table
 		$('#browse-tab .pagination').live('click',function(){
-			msgbx('loading...', 'waiting');
+			msgbx(ss.i18n._t('DBP_Table.MSG_LOADING', 'loading...'), 'waiting');
 			$('#browse-tab').load($('a',this).attr('href'), function(){
 				$("#right table.kike").kiketable_colsizable(kikeoptions);
-				msgbx('loaded', 'good');
+				msgbx(ss.i18n._t('DBP_Table.MSG_LOADED', 'loaded'), 'good');
 			});
 			return false;
 		});
 
 		// order the records of a table by the selected field
 		$('#browse-tab .fieldname a').live('click',function(){
-			msgbx('loading...', 'waiting');
+			msgbx(ss.i18n._t('DBP_Table.MSG_LOADING', 'loading...'), 'waiting');
 			$('#browse-tab').load($(this).attr('href'), function(){
 				$("#right table.kike").kiketable_colsizable(kikeoptions);
-				msgbx('loaded', 'good');
+				msgbx(ss.i18n._t('DBP_Table.MSG_LOADED', 'LOADED'), 'good');
 			});
 			return false;
 		});
@@ -168,12 +170,12 @@ function msgbx(text,status) {
 		$('#browse-tab .delete-records').live('click',function(){
 			ids = new Array(); $('#browse-tab tbody tr.selected').each(function(){ ids.push($(this).attr('id'));	});
 			var redirect = $('#url').val() + '?start=' + $('#start').val() + '&orderby=' + $('#orderby').val() + '&orderdir=' + $('#orderdir').val();
-			msgbx('deleting...', 'waiting');
+			msgbx(ss.i18n._t('DBP_Table.MSG_DELETING', 'deleting...'), 'waiting');
 			
 			$.post($('a',this).attr('href'), {ids: ids, redirect: redirect}, function(){
-				msgbx('deleted', 'good');
+				msgbx(ss.i18n._t('DBP_Table.MSG_DELETED', 'deleted'), 'good');
 				$('#browse-tab').load(redirect, function(){
-					msgbx('loaded', 'good');
+					msgbx(ss.i18n._t('DBP_Table.MSG_LOADED', 'loaded'), 'good');
 					$("#right table.kike").kiketable_colsizable(kikeoptions);
 				});
 			});
@@ -183,28 +185,28 @@ function msgbx(text,status) {
 
 		// load a record into the edit form
 		$('#browse-tab tbody tr').live('dblclick',function(){
-			msgbx('loading...', 'waiting');
+			msgbx(ss.i18n._t('DBP_Table.MSG_LOADING', 'loading...'), 'waiting');
 			var recid = $(this).attr('id');
 			$('#form-tab').load('admin/dbplumber/record/form/' + recid, { oldid: recid }, function(){
 				$("#tabs").tabs('select', 2);
-				msgbx('loaded', 'good');
+				msgbx(ss.i18n._t('DBP_Table.MSG_LOADED', 'loaded'), 'good');
 				initRight();
 			});
 		});
 
 		// save a record 
 		$('button.saverecord').live('click',function(){
-			msgbx('saving...', 'waiting');
+			msgbx(ss.i18n._t('DBP_Table.MSG_SAVING', 'saving...'), 'waiting');
 			var recid = $('#oldid').val();
 			var url = $('#recordform').attr('action');
 			$.post(
 				url,
 				$('#recordform').serialize(),
 				function(data){
-					msgbx('saved, reloading...', 'waiting');
+					msgbx(ss.i18n._t('DBP_Table.MSG_SAVED_LOADING', 'saved, reloading...'), 'waiting');
 					var redirect = 'admin/dbplumber/table/show/' + $('#table').val() + '?start=' + $('#start').val() + '&orderby=' + $('#orderby').val() + '&orderdir=' + $('#orderdir').val() + '&record=' + data.id;
 					$('#right div.main').load(redirect , function(){
-						msgbx('reloaded', 'good');
+						msgbx(ss.i18n._t('DBP_Table.MSG_RELOADED', 'reloaded'), 'good');
 						initRight();
 						$("#tabs").tabs('select', 2);
 					});
@@ -228,7 +230,7 @@ function msgbx(text,status) {
 		initRight();
 		
 		if($.browser.msie){
-			msgbx('IE is currently not supported by DB Plumber', 'bad');
+			msgbx(ss.i18n._t('DBP_Table.MSG_IE_NOT_SUPPORTED', 'IE is currently not supported by DB Plumber'), 'bad');
 		}
 
 
