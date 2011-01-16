@@ -49,6 +49,7 @@ $lang['de_DE']['DBP_Database_export.ss']['TABLES_TO_EXPORT'] = 'Tabellen';
 $lang['de_DE']['DBP_Database_export.ss']['EXPORT_FORMAT'] = 'Exportformat';
 $lang['de_DE']['DBP_Database_export.ss']['EXPORT_FORMAT_BACKUP'] = 'Backup (SQL DELETEs und INSERTs)';
 $lang['de_DE']['DBP_Database_export.ss']['EXPORT_FORMAT_BACKUP_ZIPPED'] = 'Backup ZLIB-komprimiert';
+$lang['de_DE']['DBP_Database_export.ss']['EXPORT_FORMAT_BACKUP_OPENOFFICE'] = 'Open Office Spreadsheet (MS Excel und OpenOffice Calc kompatibel)';
 $lang['de_DE']['DBP_Database_export.ss']['SQL_DIALECT'] = 'SQL-Dialekt';
 $lang['de_DE']['DBP_Database_export.ss']['EXPORT_BUTTON'] = 'exportieren';
 

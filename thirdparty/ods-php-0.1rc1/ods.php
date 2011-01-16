@@ -47,34 +47,35 @@ class ods {
 	}
 	
 	function array2ods() {
+		$lf = "\n";
 		$fontArray = $this->fonts;
 		$styleArray = $this->styles;
 		$sheetArray = $this->sheets;
 		// Header
-		$string = '<?xml version="1.0" encoding="UTF-8"?><office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" office:version="1.0">';
+		$string = '<?xml version="1.0" encoding="UTF-8"?><office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" office:version="1.0">' . $lf;
 		
 		// ToDo: scripts
-		$string .= '<office:scripts/>';
+		$string .= '<office:scripts/>' . $lf;
 		
 		// Fonts
-		$string .= '<office:font-face-decls>';
+		$string .= '<office:font-face-decls>' . $lf;
 		foreach ($fontArray as $fontName => $fontAttribs) {
 			$string .= '<style:font-face ';
 			foreach ($fontAttribs as $attrName => $attrValue) {
 				$string .= strtolower($attrName) . '="' . $attrValue . '" ';
 			}
-			$string .= '/>';
+			$string .= '/>' . $lf;
 		}
-		$string .= '</office:font-face-decls>';
+		$string .= '</office:font-face-decls>' . $lf;
 		
 		// Styles
-		$string .= '<office:automatic-styles>';
+		$string .= '<office:automatic-styles>' . $lf;
 		foreach ($styleArray as $styleName => $styleAttribs) {
 			$string .= '<style:style ';
 			foreach ($styleAttribs['attrs'] as $attrName => $attrValue) {
 				$string .= strtolower($attrName) . '="' . $attrValue . '" ';
 			}
-			$string .= '>';
+			$string .= '>' . $lf;
 			
 			// Subnodes
 			foreach ($styleAttribs['styles'] as $nodeName => $nodeTree) {
@@ -82,48 +83,48 @@ class ods {
 				foreach ($nodeTree as $attrName => $attrValue) {
 					$string .= strtolower($attrName) . '="' . $attrValue . '" ';
 				}
-				$string .= '/>';
+				$string .= '/>' . $lf;
 			}
 			
-			$string .= '</style:style>';
+			$string .= '</style:style>' . $lf;
 		}
-		$string .= '</office:automatic-styles>';
+		$string .= '</office:automatic-styles>' . $lf;
 		
 		// Body
-		$string .= '<office:body>';
-		$string .= '<office:spreadsheet>';
+		$string .= '<office:body>' . $lf;
+		$string .= '<office:spreadsheet>' . $lf;
 		foreach ($sheetArray as $tableIndex => $tableContent) {
-			$string .= '<table:table table:name="' . $tableIndex . '" table:print="false">';
+			$string .= '<table:table table:name="' . $tableIndex . '" table:print="false">' . $lf;
 			//$string .= '<office:forms form:automatic-focus="false" form:apply-design-mode="false"/>';
 			
 			foreach ($tableContent['rows'] as $rowIndex => $rowContent) {
-				$string .= '<table:table-row>';
+				$string .= '<table:table-row>' . $lf;
 				
 				foreach($rowContent as $cellIndex => $cellContent) {
 					$string .= '<table:table-cell ';
 					foreach ($cellContent['attrs'] as $attrName => $attrValue) {
 						$string .= strtolower($attrName) . '="' . $attrValue . '" ';
 					}
-					$string .= '>';
+					$string .= '>' . $lf;
 					
 					if (isset($cellContent['value'])) {
-						$string .= '<text:p>' . $cellContent['value'] . '</text:p>';
+						$string .= '<text:p>' . $cellContent['value'] . '</text:p>' . $lf;
 					}
 					
-					$string .= '</table:table-cell>';
+					$string .= '</table:table-cell>' . $lf;
 				}
 				
-				$string .= '</table:table-row>';
+				$string .= '</table:table-row>' . $lf;
 			}
 			
-			$string .= '</table:table>';
+			$string .= '</table:table>' . $lf;
 		}
 		
-		$string .= '</office:spreadsheet>';
-		$string .= '</office:body>';
+		$string .= '</office:spreadsheet>' . $lf;
+		$string .= '</office:body>' . $lf;
 		
 		// Footer
-		$string .= '</office:document-content>';
+		$string .= '</office:document-content>' . $lf;
 		
 		return $string;
 	}

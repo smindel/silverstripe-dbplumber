@@ -84,6 +84,14 @@ function msgbx(text,status) {
 				}
 			});
 		});
+
+		$("input[name=exporttype]").live('click', function(){
+			if($('#exporttype_openoffice').attr('checked')) {
+				$('#dialect_div').slideUp();
+			} else {
+				$('#dialect_div').slideDown();
+			}
+		});
 	}
 	
 	// set the proper sizes for tabs and table list
