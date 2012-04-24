@@ -25,7 +25,7 @@ class RemoveArtefactsTask extends BuildTask {
 			foreach($artefacts as $table => $drop) {
 				if(is_array($drop)) {
 					DBP_SQLDialect::get()->dropColumns($table, $drop);
-					echo "<li>column " . implode("</li><li>column ", $drop) . "</li>";
+					echo "<li>column {$table}." . implode("</li><li>column {$table}.", $drop) . "</li>";
 				} else {
 					echo "<li>table $table</li>";
 					DBP_SQLDialect::get()->dropTable($table);
