@@ -4,7 +4,7 @@ class FixLowercaseTableNamesTask extends BuildTask {
 
 	protected $title = 'Fix Lowercase Table Names';
 
-	protected $description = 'When migrating databases from a Windows machine with lowercase tablenames to a *unix machine tables have to be renamed.';
+	protected $description = 'When migrating databases from a Windows machine with lowercase tablenames to a *nix machine tables have to be renamed.';
 
 	function init() {
 		parent::init();
