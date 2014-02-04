@@ -21,5 +21,5 @@
 			<div class="input"<% if Available == 0 %> style="color:grey"<% end_if %>><input id='SqlDialect_{$Name}' name='SqlDialect' value='{$Name}' type="radio"<% if Available == 0 %> disabled="disabled"<% end_if %><% if Selected %> checked="checked"<% end_if %>> $Name</div>
 		<% end_control %>
 	</div>
-	<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only export" aria-disabled="false" type="submit"><a href='#'><% _t('EXPORT_BUTTON', 'export') %></a></button>
+	<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only export" aria-disabled="false" type="submit"><% _t('EXPORT_BUTTON', 'export') %></button>
 </form>
